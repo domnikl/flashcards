@@ -10,3 +10,4 @@ A very fabulous flashcards app running on [fabulous-flashcards.netlify.app](http
 * create card sets
 * create flash cards
 * flashcard questionaire + ranking
+* ability to log out

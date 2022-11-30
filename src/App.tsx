@@ -1,26 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useEffect, useState} from 'react';
 import './App.css';
+import {ThemeProvider} from "@mui/material";
+import {theme} from "./Theme";
+import {Main} from "./components/Main";
+import {Login} from "./components/Login";
+import {Auth} from "@supabase/auth-ui-react";
+import {supabase} from "./supabase";
+import {User} from "@supabase/supabase-js";
+import UserContextProvider = Auth.UserContextProvider;
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const [user, setUser] = useState<undefined | User>();
+
+    useEffect(() => {
+        supabase.auth.getSession().then((x) => {
+            setUser(x.data.session?.user)
+        })
+    }, []);
+
+    return (
+        <UserContextProvider supabaseClient={supabase}>
+            <ThemeProvider theme={theme}>
+                {user ? <Main/> : <Login/>}
+            </ThemeProvider>
+        </UserContextProvider>
+    );
 }
 
 export default App;

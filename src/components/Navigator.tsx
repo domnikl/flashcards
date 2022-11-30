@@ -8,44 +8,25 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import HomeIcon from '@mui/icons-material/Home';
-import PeopleIcon from '@mui/icons-material/People';
-import DnsRoundedIcon from '@mui/icons-material/DnsRounded';
-import PermMediaOutlinedIcon from '@mui/icons-material/PhotoSizeSelectActual';
-import PublicIcon from '@mui/icons-material/Public';
-import SettingsEthernetIcon from '@mui/icons-material/SettingsEthernet';
 import SettingsInputComponentIcon from '@mui/icons-material/SettingsInputComponent';
-import TimerIcon from '@mui/icons-material/Timer';
-import SettingsIcon from '@mui/icons-material/Settings';
-import PhonelinkSetupIcon from '@mui/icons-material/PhonelinkSetup';
 import {Typography} from "@mui/material";
+import FlightIcon from '@mui/icons-material/Flight';
 
 const categories = [
     {
-        id: 'Build',
+        id: 'Flashcard Sets',
         children: [
             {
-                id: 'Authentication',
-                icon: <PeopleIcon/>,
+                id: 'Airbus A320',
+                icon: <FlightIcon/>,
                 active: true,
             },
-            {id: 'Database', icon: <DnsRoundedIcon/>},
-            {id: 'Storage', icon: <PermMediaOutlinedIcon/>},
-            {id: 'Hosting', icon: <PublicIcon/>},
-            {id: 'Functions', icon: <SettingsEthernetIcon/>},
             {
                 id: 'Machine learning',
                 icon: <SettingsInputComponentIcon/>,
             },
         ],
-    },
-    {
-        id: 'Quality',
-        children: [
-            {id: 'Analytics', icon: <SettingsIcon/>},
-            {id: 'Performance', icon: <TimerIcon/>},
-            {id: 'Test Lab', icon: <PhonelinkSetupIcon/>},
-        ],
-    },
+    }
 ];
 
 const item = {
@@ -64,6 +45,8 @@ const itemCategory = {
 };
 
 export default function Navigator(props: DrawerProps) {
+    const active = "Airbus A320";
+
     const {...other} = props;
 
     return (
@@ -85,9 +68,9 @@ export default function Navigator(props: DrawerProps) {
                         <ListItem sx={{py: 2, px: 3}}>
                             <ListItemText sx={{color: '#fff'}}>{id}</ListItemText>
                         </ListItem>
-                        {children.map(({id: childId, icon, active}) => (
+                        {children.map(({id: childId, icon}) => (
                             <ListItem disablePadding key={childId}>
-                                <ListItemButton selected={active} sx={item}>
+                                <ListItemButton selected={childId === active} sx={item}>
                                     <ListItemIcon>{icon}</ListItemIcon>
                                     <ListItemText>{childId}</ListItemText>
                                 </ListItemButton>

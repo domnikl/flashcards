@@ -3,12 +3,9 @@ import {Box, CssBaseline, Link, Typography, useMediaQuery} from "@mui/material";
 import {theme} from "../Theme";
 import Navigator from "./Navigator";
 import Header from "./Header";
+import {CardsThingy} from "./CardsThingy";
 
 let drawerWidth = 256;
-
-function Content() { // TODO: remove from here!
-    return (<div>content</div>);
-}
 
 function Copyright() {
     return (
@@ -50,7 +47,7 @@ export function Main() {
             <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
                 <Header onDrawerToggle={handleDrawerToggle}/>
                 <Box component="main" sx={{flex: 1, py: 6, px: 4}}>
-                    <Content/>
+                    <CardsThingy/>
                 </Box>
                 <Box component="footer" sx={{p: 2}}>
                     <Copyright/>

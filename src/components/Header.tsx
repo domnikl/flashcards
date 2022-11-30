@@ -1,6 +1,5 @@
 import AppBar from '@mui/material/AppBar';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import HelpIcon from '@mui/icons-material/Help';
 import IconButton from '@mui/material/IconButton';
@@ -74,17 +73,8 @@ export default function Header(props: HeaderProps) {
                     <Grid container alignItems="center" spacing={1}>
                         <Grid item xs>
                             <Typography color="inherit" variant="h5" component="h1">
-                                Authentication
+                                Airbus A320
                             </Typography>
-                        </Grid>
-                        <Grid item>
-                            <Button
-                                variant="outlined"
-                                color="inherit"
-                                size="small"
-                            >
-                                Web setup
-                            </Button>
                         </Grid>
                         <Grid item>
                             <Tooltip title="Help">
@@ -98,10 +88,8 @@ export default function Header(props: HeaderProps) {
             </AppBar>
             <AppBar component="div" position="static" elevation={0} sx={{zIndex: 0}}>
                 <Tabs value={0} textColor="inherit">
-                    <Tab label="Users"/>
-                    <Tab label="Sign-in method"/>
-                    <Tab label="Templates"/>
-                    <Tab label="Usage"/>
+                    <Tab label="Train"/>
+                    <Tab label="Settings"/>
                 </Tabs>
             </AppBar>
         </React.Fragment>
