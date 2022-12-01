@@ -3,7 +3,7 @@ import {Box, CssBaseline, Link, Typography, useMediaQuery} from "@mui/material";
 import {theme} from "../Theme";
 import Navigator from "./Navigator";
 import Header from "./Header";
-import {CardsThingy} from "./CardsThingy";
+import {Outlet} from "react-router-dom";
 
 let drawerWidth = 256;
 
@@ -47,7 +47,7 @@ export function Main() {
             <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
                 <Header onDrawerToggle={handleDrawerToggle}/>
                 <Box component="main" sx={{flex: 1, py: 6, px: 4}}>
-                    <CardsThingy/>
+                    <Outlet/>
                 </Box>
                 <Box component="footer" sx={{p: 2}}>
                     <Copyright/>

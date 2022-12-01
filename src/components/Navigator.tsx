@@ -8,26 +8,14 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import HomeIcon from '@mui/icons-material/Home';
-import SettingsInputComponentIcon from '@mui/icons-material/SettingsInputComponent';
-import {Typography} from "@mui/material";
-import FlightIcon from '@mui/icons-material/Flight';
-
-const categories = [
-    {
-        id: 'Flashcard Sets',
-        children: [
-            {
-                id: 'Airbus A320',
-                icon: <FlightIcon/>,
-                active: true,
-            },
-            {
-                id: 'Machine learning',
-                icon: <SettingsInputComponentIcon/>,
-            },
-        ],
-    }
-];
+import {Button, Link, Typography} from "@mui/material";
+import {Auth} from "@supabase/auth-ui-react";
+import {findAllCardsetsByUser} from "../supabase";
+import {useQuery} from "react-query";
+import {Cardset} from "../model/Cardset";
+import IsLoading from './atoms/IsLoading';
+import EmptyView from "./atoms/EmptyView";
+import useUser = Auth.useUser;
 
 const item = {
     py: '2px',
@@ -45,8 +33,15 @@ const itemCategory = {
 };
 
 export default function Navigator(props: DrawerProps) {
-    const active = "Airbus A320";
+    const user = useUser();
 
+    // @ts-ignore
+    const {
+        data: cardsets,
+        isLoading: isLoadingCardsets
+    } = useQuery<Array<Cardset>>('cardsets', () => findAllCardsetsByUser(user.user))
+
+    // TODO: mark the active one (if any)
     const {...other} = props;
 
     return (
@@ -61,24 +56,30 @@ export default function Navigator(props: DrawerProps) {
                     <ListItemIcon>
                         <HomeIcon/>
                     </ListItemIcon>
-                    <ListItemText>Cards Overview</ListItemText>
+                    <ListItemText>
+                        <Link href="/" color="inherit" underline="none"> Cards Overview</Link>
+                    </ListItemText>
                 </ListItem>
-                {categories.map(({id, children}) => (
-                    <Box key={id}>
+                <IsLoading isFetching={isLoadingCardsets}>
+                    <Box>
                         <ListItem sx={{py: 2, px: 3}}>
-                            <ListItemText sx={{color: '#fff'}}>{id}</ListItemText>
+                            <ListItemText sx={{color: '#fff'}}>Flashcard Sets</ListItemText>
                         </ListItem>
-                        {children.map(({id: childId, icon}) => (
-                            <ListItem disablePadding key={childId}>
-                                <ListItemButton selected={childId === active} sx={item}>
-                                    <ListItemIcon>{icon}</ListItemIcon>
-                                    <ListItemText>{childId}</ListItemText>
-                                </ListItemButton>
-                            </ListItem>
-                        ))}
+                        <EmptyView checkItems={cardsets}
+                                   emptyContent={<ListItem><Button variant="outlined" href="/cardsets/create">Add your
+                                       first
+                                       cardset</Button></ListItem>}>
+                            {cardsets?.map((cardset) => (
+                                <ListItem disablePadding key={cardset.id}>
+                                    <ListItemButton selected={cardset.id === "1"} sx={item}>
+                                        <ListItemText>{cardset.name}</ListItemText>
+                                    </ListItemButton>
+                                </ListItem>
+                            ))}
+                        </EmptyView>
                         <Divider sx={{mt: 2}}/>
                     </Box>
-                ))}
+                </IsLoading>
             </List>
         </Drawer>
     );
