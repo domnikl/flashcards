@@ -72,7 +72,9 @@ export default function Navigator(props: DrawerProps) {
                             {cardsets?.map((cardset) => (
                                 <ListItem disablePadding key={cardset.id}>
                                     <ListItemButton selected={cardset.id === "1"} sx={item}>
-                                        <ListItemText>{cardset.name}</ListItemText>
+                                        <ListItemText>
+                                            <Link underline="none" color="inherit" href={"/cardsets/" + cardset.id}>{cardset.name}</Link>
+                                        </ListItemText>
                                     </ListItemButton>
                                 </ListItem>
                             ))}

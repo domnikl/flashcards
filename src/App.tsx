@@ -9,10 +9,11 @@ import {supabase} from "./supabase";
 import {User} from "@supabase/supabase-js";
 import {QueryClient, QueryClientProvider} from "react-query";
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
-import {CardsetsPage} from "./components/CardsetsPage";
+import {CardsetsOverviewPage} from "./components/CardsetsOverviewPage";
 import ErrorPage from "./components/ErrorPage";
 import {EditCardsetPage} from "./components/EditCardsetPage";
 import UserContextProvider = Auth.UserContextProvider;
+import {CardsetPage, cardsetLoader} from "./components/CardsetPage";
 
 const queryClient = new QueryClient();
 
@@ -33,11 +34,16 @@ function App() {
             children: [
                 {
                     index: true,
-                    element: <CardsetsPage/>
+                    element: <CardsetsOverviewPage/>
+                },
+                {
+                    path: "cardsets/:cardsetId",
+                    element: <CardsetPage />,
+                    loader: cardsetLoader
                 },
                 {
                     path: "cardsets",
-                    element: <CardsetsPage/>
+                    element: <CardsetsOverviewPage/>
                 },
                 {
                     path: "cardsets/create",

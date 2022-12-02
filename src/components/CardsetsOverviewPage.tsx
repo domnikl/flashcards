@@ -10,7 +10,7 @@ import {Fab} from "@mui/material";
 import {Add} from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
 
-export function CardsetsPage() {
+export function CardsetsOverviewPage() {
     const navigate = useNavigate();
 
     return (<React.Fragment>

@@ -20,6 +20,17 @@ export async function findAllCardsetsByUser(user: User | null): Promise<Array<Ca
         });
 }
 
+export async function findCardsetById(id: string): Promise<Cardset|null> {
+    return supabase
+        .from("cardsets")
+        .select()
+        .eq("id", id)
+        .then(({data}: { data: Cardset[] | null }) => {
+            return data?.at(0) ?? null;
+        });
+}
+
+
 export async function saveCardset(cardset: Cardset, user_id: string) {
     return supabase
         .from("cardsets")
