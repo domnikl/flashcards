@@ -20,9 +20,9 @@ declare module '@mui/material/Typography' {
 export let theme = createTheme({
     palette: {
         primary: {
-            light: '#5ddef4',
-            main: '#00acc1',
-            dark: '#007c91',
+            light: '#512da8',
+            main: '#8559da',
+            dark: '#352459',
         },
         secondary: {
             light: '#ffd95b',
@@ -30,6 +30,9 @@ export let theme = createTheme({
             dark: '#c77800',
         },
         mode: 'dark',
+        background: {
+            default: "#181818"
+        }
     },
     typography: {
         h5: {
@@ -65,7 +68,7 @@ theme = {
         MuiDrawer: {
             styleOverrides: {
                 paper: {
-                    //backgroundColor: '#ffa726',
+                    //backgroundColor: '#352459',
                 },
             },
         },
@@ -134,7 +137,7 @@ theme = {
             styleOverrides: {
                 root: {
                     '&.Mui-selected': {
-                        //color: '#ffa726',
+                        color: '#ffa726',
                     },
                 },
             },

@@ -1,41 +1,34 @@
 import React, {useState} from "react";
-import {Button, Container, Grid, TextField, Typography} from "@mui/material";
+import {Button, Container, Grid, TextField} from "@mui/material";
 import {Cardset} from "../model/Cardset";
 import {Auth} from "@supabase/auth-ui-react";
 import {uuid} from "@supabase/supabase-js/dist/main/lib/helpers";
 import {useQueryClient} from "react-query";
-import {useNavigate} from "react-router-dom";
+import {useLoaderData, useNavigate} from "react-router-dom";
 import {Controller, useForm} from "react-hook-form";
-import useUser = Auth.useUser;
 import {saveCardset} from "../supabase";
+import {PageHeader} from "./PageHeader";
+import useUser = Auth.useUser;
 
-type EditCardsetPageProps = {
-    cardset?: Cardset | null;
-}
 
-export function EditCardsetPage(props: EditCardsetPageProps) {
+export function EditCardsetPage() {
+    let cardset = useLoaderData() as Cardset | null;
     const queryClient = useQueryClient();
     const navigate = useNavigate();
     const user = useUser();
-    const [id, setId] = useState<string>(props.cardset?.id ?? uuid());
+    const [id, setId] = useState<string>(cardset?.id ?? uuid());
 
     const { control, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
-            name: props.cardset?.name ?? ""
+            name: cardset?.name ?? ""
         }
     });
 
     const onSubmit = ({ name }: { name: string }) => {
-        const cardset: Cardset = props.cardset ?? {
-            id: id,
-            name: name,
-            is_deleted: false,
-        }
-
-        // TODO: what if supabase has an error?
+        const updated = {id, ...cardset, name, is_deleted: false}
 
         if (user?.user) {
-            saveCardset(cardset, user!!.user!!.id).then((cardsets) => {
+            saveCardset(updated, user!!.user!!.id).then((cardsets) => {
                 setId(cardsets[0].id);
                 queryClient.invalidateQueries('cardsets').then(() => navigate("/cardsets/" + cardsets[0].id, {replace: true}))
             })
@@ -43,13 +36,11 @@ export function EditCardsetPage(props: EditCardsetPageProps) {
     }
 
     return <React.Fragment>
-        <Typography variant="h6" gutterBottom>
-            {!props.cardset ? "Create" : "Edit"} cardset
-        </Typography>
+        <PageHeader title={(!cardset ? "Create" : "Edit") + " cardset"} />
 
         <Container>
             <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12}>
                     <Controller
                         name="name"
                         control={control}
@@ -65,14 +56,21 @@ export function EditCardsetPage(props: EditCardsetPageProps) {
                             helperText={errors?.name?.message}
                             fullWidth
                             autoComplete="name"
-                            variant="standard"
+                            variant="filled"
                             onKeyDown={(e) => e.key === "Enter" ? handleSubmit(onSubmit) : null}
                             autoFocus
                             {...field}/>}
                     />
                 </Grid>
-                <Grid item xs={12} md={6}>
-                    <Button variant="contained" onClick={handleSubmit(onSubmit)}>Save</Button>
+                <Grid item xs={12}>
+                    <Grid container direction="row" justifyContent="flex-end">
+                        <Grid item sx={{ padding: '5px' }}>
+                            <Button variant="outlined" onClick={() => navigate("/cardsets")}>Cancel</Button>
+                        </Grid>
+                        <Grid item sx={{ padding: '5px' }}>
+                            <Button variant="contained" onClick={handleSubmit(onSubmit)}>Save</Button>
+                        </Grid>
+                    </Grid>
                 </Grid>
             </Grid>
         </Container>

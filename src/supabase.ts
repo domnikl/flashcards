@@ -54,7 +54,7 @@ export async function saveCardset(cardset: Cardset, user_id: string) {
 
 export async function saveCard(card: Card, user_id: string) {
     return supabase
-        .from("cardsets")
+        .from("cards")
         .upsert([{...card, user_id: user_id}])
         .select()
         .then(({data}: { data: Card[] | null }) => {

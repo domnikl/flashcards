@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Box, CssBaseline, Link, Typography, useMediaQuery} from "@mui/material";
+import {Box, CssBaseline, Link, Typography, useMediaQuery, useTheme} from "@mui/material";
 import {theme} from "../Theme";
 import Navigator from "./Navigator";
 import Header from "./Header";
@@ -11,7 +11,7 @@ function Copyright() {
     return (
         <Typography variant="body2" color="text.secondary" align="center">
             {'Copyright © '}
-            <Link color="inherit" href="https://fabulous-flashcards.netlify.com/">
+            <Link color="text.secondary" href="/">
                 Fabulous Flashcards
             </Link>{' '}
             {new Date().getFullYear()}.
@@ -46,9 +46,10 @@ export function Main() {
             </Box>
             <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
                 <Header onDrawerToggle={handleDrawerToggle}/>
-                <Box component="main" sx={{flex: 1, py: 6, px: 4}}>
+                <Box component="main" sx={{flex: 1}}>
                     <Outlet/>
                 </Box>
+
                 <Box component="footer" sx={{p: 2}}>
                     <Copyright/>
                 </Box>

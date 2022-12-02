@@ -43,6 +43,11 @@ function App() {
                     loader: cardsetLoader
                 },
                 {
+                    path: "cardsets/:cardsetId/edit",
+                    element: <EditCardsetPage />,
+                    loader: cardsetLoader
+                },
+                {
                     path: "cardsets/:cardsetId",
                     element: <CardsetPage />,
                     loader: cardsetLoader

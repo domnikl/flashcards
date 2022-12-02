@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Divider from '@mui/material/Divider';
 import Drawer, {DrawerProps} from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import Box from '@mui/material/Box';
@@ -47,28 +46,24 @@ export default function Navigator(props: DrawerProps) {
     return (
         <Drawer variant="permanent" {...other}>
             <List disablePadding>
-                <ListItem sx={{...item, ...itemCategory, fontSize: 22, color: '#fff'}}>
-                    <Typography variant="handwriting">
+                <ListItem sx={{...item, ...itemCategory, fontSize: 23}}>
+                    <Typography variant="handwriting" color="primary.main">
                         Fabulous Flashcards
                     </Typography>
                 </ListItem>
-                <ListItem disablePadding sx={{...item, ...itemCategory}}>
+                <ListItemButton sx={{...item, ...itemCategory}} component={Link} to="/">
                     <ListItemIcon>
                         <HomeIcon/>
                     </ListItemIcon>
-                    <ListItemButton component={Link} to="/">
-                        <ListItemText primary="Cards Overview"/>
-                    </ListItemButton>
-                </ListItem>
+                    <ListItemText primary="Cards Overview"/>
+                </ListItemButton>
                 <IsLoading isFetching={isLoadingCardsets}>
                     <Box>
                         <ListItem sx={{py: 2, px: 3}}>
                             <ListItemText sx={{color: '#fff'}}>Flashcard Sets</ListItemText>
                         </ListItem>
                         <EmptyView checkItems={cardsets}
-                                   emptyContent={<ListItem><Button variant="outlined" href="/cardsets/create">Add your
-                                       first
-                                       cardset</Button></ListItem>}>
+                                   emptyContent={<ListItem><Button variant="outlined" href="/cardsets/create">Add your first cardset</Button></ListItem>}>
                             {cardsets?.map((cardset) => (
                                 <ListItem disablePadding key={cardset.id} sx={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
                                     <ListItemButton component={Link} to={"/cardsets/" + cardset.id}>
@@ -77,7 +72,6 @@ export default function Navigator(props: DrawerProps) {
                                 </ListItem>
                             ))}
                         </EmptyView>
-                        <Divider sx={{mt: 2}}/>
                     </Box>
                 </IsLoading>
             </List>

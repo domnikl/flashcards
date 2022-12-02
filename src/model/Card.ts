@@ -5,4 +5,5 @@ export type Card = {
     readonly context: string | null;
     readonly cardset_id: string;
     readonly is_deleted: boolean;
+    readonly user_id: string;
 }
