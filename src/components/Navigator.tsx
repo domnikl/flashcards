@@ -4,17 +4,17 @@ import Drawer, {DrawerProps} from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import Box from '@mui/material/Box';
 import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
+import {Button, ListItemButton, Typography} from '@mui/material';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import HomeIcon from '@mui/icons-material/Home';
-import {Button, Link, Typography} from "@mui/material";
 import {Auth} from "@supabase/auth-ui-react";
 import {findAllCardsetsByUser} from "../supabase";
 import {useQuery} from "react-query";
 import {Cardset} from "../model/Cardset";
 import IsLoading from './atoms/IsLoading';
 import EmptyView from "./atoms/EmptyView";
+import {Link} from "react-router-dom";
 import useUser = Auth.useUser;
 
 const item = {
@@ -52,13 +52,13 @@ export default function Navigator(props: DrawerProps) {
                         Fabulous Flashcards
                     </Typography>
                 </ListItem>
-                <ListItem sx={{...item, ...itemCategory}}>
+                <ListItem disablePadding sx={{...item, ...itemCategory}}>
                     <ListItemIcon>
                         <HomeIcon/>
                     </ListItemIcon>
-                    <ListItemText>
-                        <Link href="/" color="inherit" underline="none"> Cards Overview</Link>
-                    </ListItemText>
+                    <ListItemButton component={Link} to="/">
+                        <ListItemText primary="Cards Overview"/>
+                    </ListItemButton>
                 </ListItem>
                 <IsLoading isFetching={isLoadingCardsets}>
                     <Box>
@@ -70,11 +70,9 @@ export default function Navigator(props: DrawerProps) {
                                        first
                                        cardset</Button></ListItem>}>
                             {cardsets?.map((cardset) => (
-                                <ListItem disablePadding key={cardset.id}>
-                                    <ListItemButton selected={cardset.id === "1"} sx={item}>
-                                        <ListItemText>
-                                            <Link underline="none" color="inherit" href={"/cardsets/" + cardset.id}>{cardset.name}</Link>
-                                        </ListItemText>
+                                <ListItem disablePadding key={cardset.id} sx={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
+                                    <ListItemButton component={Link} to={"/cardsets/" + cardset.id}>
+                                        <ListItemText primary={cardset.name}/>
                                     </ListItemButton>
                                 </ListItem>
                             ))}

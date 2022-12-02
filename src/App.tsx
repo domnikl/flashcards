@@ -8,12 +8,13 @@ import {Auth} from "@supabase/auth-ui-react";
 import {supabase} from "./supabase";
 import {User} from "@supabase/supabase-js";
 import {QueryClient, QueryClientProvider} from "react-query";
-import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import {createHashRouter, RouterProvider} from "react-router-dom";
 import {CardsetsOverviewPage} from "./components/CardsetsOverviewPage";
 import ErrorPage from "./components/ErrorPage";
 import {EditCardsetPage} from "./components/EditCardsetPage";
+import {cardsetLoader, CardsetPage} from "./components/CardsetPage";
+import {EditCardPage} from "./components/EditCardPage";
 import UserContextProvider = Auth.UserContextProvider;
-import {CardsetPage, cardsetLoader} from "./components/CardsetPage";
 
 const queryClient = new QueryClient();
 
@@ -26,7 +27,7 @@ function App() {
         })
     }, []);
 
-    const router = createBrowserRouter([
+    const router = createHashRouter([
         {
             path: "/",
             element: user ? <Main/> : <Login/>,
@@ -35,6 +36,11 @@ function App() {
                 {
                     index: true,
                     element: <CardsetsOverviewPage/>
+                },
+                {
+                    path: "cardsets/:cardsetId/cards/create",
+                    element: <EditCardPage/>,
+                    loader: cardsetLoader
                 },
                 {
                     path: "cardsets/:cardsetId",

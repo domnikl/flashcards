@@ -1,4 +1,4 @@
-import {Box, Typography} from '@mui/material';
+import {Container} from '@mui/material';
 import React, {ReactNode} from 'react';
 
 type EmptyProps = {
@@ -18,21 +18,15 @@ function hasData(items: Array<any> | Object | null | undefined) {
 }
 
 export default function EmptyView(props: EmptyProps) {
-    const text = props.emptyContent ?? 'No data';
+    const emptyContent = props.emptyContent ?? 'No data';
     const x = hasData(props.checkItems);
 
     return (
         <React.Fragment>
             {!x && (
-                <Box>
-                    <Typography
-                        sx={{fontSize: 12, textAlign: 'center'}}
-                        color="text.secondary"
-                        gutterBottom
-                    >
-                        {text}
-                    </Typography>
-                </Box>
+                <Container>
+                    {emptyContent}
+                </Container>
             )}
             {x && props.children}
         </React.Fragment>
