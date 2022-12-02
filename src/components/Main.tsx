@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Box, CssBaseline, Link, Typography, useMediaQuery, useTheme} from "@mui/material";
+import {Box, CssBaseline, Link, Typography, useMediaQuery} from "@mui/material";
 import {theme} from "../Theme";
 import Navigator from "./Navigator";
 import Header from "./Header";

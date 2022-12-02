@@ -24,6 +24,8 @@ export function EditCardsetPage() {
         }
     });
 
+    // TODO: limit the amount of cardsets a user can create
+
     const onSubmit = ({ name }: { name: string }) => {
         const updated = {id, ...cardset, name, is_deleted: false}
 
