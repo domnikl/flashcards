@@ -22,7 +22,7 @@ export function EditCardPage(props: EditCardPageProps) {
     const user = useUser();
     const [id, setId] = useState<string>(props.card?.id ?? uuid());
 
-    const { control, handleSubmit, formState: { errors } } = useForm({
+    const {control, handleSubmit, formState: {errors}} = useForm({
         defaultValues: {
             question: props.card?.question ?? "",
             answer: props.card?.answer ?? "",
@@ -30,7 +30,7 @@ export function EditCardPage(props: EditCardPageProps) {
         }
     });
 
-    const onSubmit = ({ question, answer, context }: { question: string, answer: string, context: string }) => {
+    const onSubmit = ({question, answer, context}: { question: string, answer: string, context: string }) => {
         const card: Card = props.card ?? {
             id: id,
             question: question,
@@ -54,7 +54,7 @@ export function EditCardPage(props: EditCardPageProps) {
     }
 
     return <React.Fragment>
-        <PageHeader title={(!props.card ? "Create" : "Edit") + " card"} />
+        <PageHeader title={(!props.card ? "Create" : "Edit") + " card"}/>
 
         <Container>
             <Grid container spacing={3}>
@@ -63,10 +63,10 @@ export function EditCardPage(props: EditCardPageProps) {
                         name="question"
                         control={control}
                         rules={{
-                            required: { value: true, message: "is required" },
-                            minLength: { value: 3, message: "is too short (3 chars min.)"},
-                            maxLength: {value: 70, message: "is too long (70 chars max.)" }}}
-                        render={({ field }) => <TextField
+                            required: {value: true, message: "is required"},
+                            maxLength: {value: 70, message: "is too long (70 chars max.)"}
+                        }}
+                        render={({field}) => <TextField
                             required
                             id="question"
                             label="What should be on the front of the card?"
@@ -84,10 +84,10 @@ export function EditCardPage(props: EditCardPageProps) {
                         name="answer"
                         control={control}
                         rules={{
-                            required: { value: true, message: "is required" },
-                            minLength: { value: 3, message: "is too short (3 chars min.)"},
-                            maxLength: {value: 70, message: "is too long (70 chars max.)" }}}
-                        render={({ field }) => <TextField
+                            required: {value: true, message: "is required"},
+                            maxLength: {value: 70, message: "is too long (70 chars max.)"}
+                        }}
+                        render={({field}) => <TextField
                             required
                             id="answer"
                             label="What should be on the back?"
@@ -104,8 +104,9 @@ export function EditCardPage(props: EditCardPageProps) {
                         name="context"
                         control={control}
                         rules={{
-                            maxLength: {value: 255, message: "is too long (255 chars max.)" }}}
-                        render={({ field }) => <TextField
+                            maxLength: {value: 255, message: "is too long (255 chars max.)"}
+                        }}
+                        render={({field}) => <TextField
                             multiline
                             rows={3}
                             id="context"
@@ -120,10 +121,11 @@ export function EditCardPage(props: EditCardPageProps) {
                 </Grid>
                 <Grid item xs={12}>
                     <Grid container direction="row" justifyContent="flex-end">
-                        <Grid item sx={{ padding: '5px' }}>
-                            <Button variant="outlined" onClick={() => navigate("/cardsets/" + cardset.id)}>Cancel</Button>
+                        <Grid item sx={{padding: '5px'}}>
+                            <Button variant="outlined"
+                                    onClick={() => navigate("/cardsets/" + cardset.id)}>Cancel</Button>
                         </Grid>
-                        <Grid item sx={{ padding: '5px' }}>
+                        <Grid item sx={{padding: '5px'}}>
                             <Button variant="contained" onClick={handleSubmit(onSubmit)}>Save</Button>
                         </Grid>
                     </Grid>

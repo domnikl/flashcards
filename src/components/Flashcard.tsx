@@ -16,10 +16,6 @@ export function Flashcard(props: FlashcardProps) {
         props.onFlipped?.apply(null, [!isFlipped]);
     }
 
-    let cardSx: SxProps<Theme> = {
-        perspective: '1000px',
-    }
-
     let cardContentSx: SxProps<Theme> = {
         cursor: "pointer",
         transformStyle: "preserve-3d",
@@ -35,38 +31,42 @@ export function Flashcard(props: FlashcardProps) {
         cardInnerSx = {...cardInnerSx, transform: 'rotateY(180deg)'}
     }
 
-    return <Card sx={{minHeight: '100px', ...cardSx}}>
+    return <Grid container sx={{minHeight: '100px', perspective: '1000px'}}>
         <Grid container sx={{
             position: 'relative',
             width: '100%',
-            height: '100px',
+            // height: '100px', // TODO: don't use hard-coded height, let the container decide
             transition: 'transform 0.8s',
             transformStyle: 'preserve-3d',
             ...cardInnerSx
         }}>
-            <CardContent onClick={() => flip()} sx={{...cardContentSx}}>
-                <Typography variant="h6" component="div">
-                    {props.card.question}
-                </Typography>
-                <Typography variant="handwriting" sx={{fontSize: '1em'}} color="text.secondary"
-                            gutterBottom>
-                    {props.card.context}
-                </Typography>
-            </CardContent>
-            <CardContent onClick={() => flip()}
-                         sx={{...cardContentSx, transform: 'rotateY(180deg)', backgroundColor: "primary.dark"}}>
-                <Typography variant="caption" component="div" color="text.secondary"
-                            sx={{whiteSpace: 'nowrap', textOverflow: 'ellipsis'}}>
-                    {props.card.question}
-                </Typography>
-                <Typography variant="h6" component="div">
-                    {props.card.answer}
-                </Typography>
-                <Typography variant="handwriting" sx={{fontSize: '1em'}} color="text.secondary"
-                            gutterBottom>
-                    {props.card.context}
-                </Typography>
-            </CardContent>
+            <Card onClick={() => flip()} sx={{...cardContentSx}}>
+                <CardContent>
+                    <Typography variant="h6" component="div">
+                        {props.card.question}
+                    </Typography>
+                    <Typography variant="handwriting" sx={{fontSize: '1em'}} color="text.secondary"
+                                gutterBottom>
+                        {props.card.context}
+                    </Typography>
+                </CardContent>
+            </Card>
+            <Card onClick={() => flip()}
+                  sx={{...cardContentSx, transform: 'rotateY(180deg)', backgroundColor: "primary.dark"}}>
+                <CardContent>
+                    <Typography variant="caption" component="div" color="text.secondary"
+                                sx={{whiteSpace: 'nowrap', textOverflow: 'ellipsis'}}>
+                        {props.card.question}
+                    </Typography>
+                    <Typography variant="h6" component="div">
+                        {props.card.answer}
+                    </Typography>
+                    <Typography variant="handwriting" sx={{fontSize: '1em'}} color="text.secondary"
+                                gutterBottom>
+                        {props.card.context}
+                    </Typography>
+                </CardContent>
+            </Card>
         </Grid>
-    </Card>;
+    </Grid>;
 }

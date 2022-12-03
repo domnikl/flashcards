@@ -75,17 +75,16 @@ export function QuizPage() {
                     </Grid>
                     {isFlipped ? <Grid container item xs={6} spacing={5} justifyContent="center">
                         <Grid item>
-                            <Button variant="contained" color="success"
-                                    onClick={() => respond('correct')}>right</Button>
-                        </Grid>
-                        <Grid item>
                             <Button variant="contained" color="error"
                                     onClick={() => respond('incorrect')}>wrong</Button>
                         </Grid>
-                    </Grid> : null}
-                    <Grid item xs={6}>
+                        <Grid item>
+                            <Button variant="contained" color="success"
+                                    onClick={() => respond('correct')}>right</Button>
+                        </Grid>
+                    </Grid> : <Grid item xs={6}>
                         <Button variant="outlined" onClick={() => respond('skipped')}>skip</Button>
-                    </Grid>
+                    </Grid>}
                 </Grid>
             </IsLoading>
         </Container>
