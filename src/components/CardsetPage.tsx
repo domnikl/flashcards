@@ -2,7 +2,7 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import React from "react";
 import {Button, Card, Container, Fab} from "@mui/material";
-import {Add, Delete, Edit} from "@mui/icons-material";
+import {Add, Delete, Edit, PlayArrow} from "@mui/icons-material";
 import {Params, useLoaderData, useNavigate} from "react-router-dom";
 import {Cardset} from "../model/Cardset";
 import {findAllCardsByCardset, saveCardset, useCardset} from "../supabase";
@@ -100,8 +100,8 @@ export function CardsetPage() {
         </Container>
 
         <Fab sx={{position: 'fixed', bottom: 32, right: 32}} color="primary" aria-label="add"
-             onClick={navigateToCreate}>
-            <Add/>
+             onClick={() => navigate("/cardsets/" + cardset.id + "/quiz")}>
+            <PlayArrow/>
         </Fab>
     </React.Fragment>);
 }

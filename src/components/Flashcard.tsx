@@ -5,12 +5,16 @@ import Typography from "@mui/material/Typography";
 
 export type FlashcardProps = {
     card: CardsetCard
+    onFlipped?: (isFlipped: boolean) => void;
 }
 
 export function Flashcard(props: FlashcardProps) {
     const [isFlipped, setIsFlipped] = useState<boolean>(false);
 
-    const flip = () => setIsFlipped(!isFlipped);
+    const flip = () => {
+        setIsFlipped(!isFlipped);
+        props.onFlipped?.apply(null, [!isFlipped]);
+    }
 
     let cardSx: SxProps<Theme> = {
         perspective: '1000px',

@@ -1,6 +1,7 @@
 import {createClient, User} from '@supabase/supabase-js'
 import {Cardset} from "./model/Cardset";
 import {Card} from "./model/Card";
+import {Quiz} from "./model/Quiz";
 
 const supabaseUrl = 'https://fsexihplnswtlgywhxkp.supabase.co'
 const supabaseKey = process.env.REACT_APP_SUPABASE_KEY!!
@@ -30,7 +31,7 @@ export async function findAllCardsetsByUser(user: User | null): Promise<Array<Ca
         });
 }
 
-export async function findCardsetById(id: string): Promise<Cardset|null> {
+export async function findCardsetById(id: string): Promise<Cardset | null> {
     return supabase
         .from("cardsets")
         .select()
@@ -62,6 +63,26 @@ export async function saveCard(card: Card, user_id: string) {
         });
 }
 
-export async function useCardset(id: string|undefined): Promise<Cardset|null> {
+export async function findQuizzesByUserId(user_id: string): Promise<Quiz[]> {
+    return supabase
+        .from("quiz")
+        .select()
+        .eq("user_id", user_id)
+        .then(({data}: { data: Quiz[] | null }) => {
+            return data ?? [];
+        });
+}
+
+export async function saveQuiz(quiz: Quiz) {
+    return supabase
+        .from("quiz")
+        .upsert([{...quiz}])
+        .select()
+        .then(({data}: { data: Card[] | null }) => {
+            return data!!;
+        });
+}
+
+export async function useCardset(id: string | undefined): Promise<Cardset | null> {
     return id ? await findCardsetById(id) ?? null : null;
 }

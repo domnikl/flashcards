@@ -14,6 +14,7 @@ import ErrorPage from "./components/ErrorPage";
 import {EditCardsetPage} from "./components/EditCardsetPage";
 import {cardsetLoader, CardsetPage} from "./components/CardsetPage";
 import {EditCardPage} from "./components/EditCardPage";
+import {QuizPage} from "./components/QuizPage";
 import UserContextProvider = Auth.UserContextProvider;
 
 const queryClient = new QueryClient();
@@ -44,12 +45,17 @@ function App() {
                 },
                 {
                     path: "cardsets/:cardsetId/edit",
-                    element: <EditCardsetPage />,
+                    element: <EditCardsetPage/>,
+                    loader: cardsetLoader
+                },
+                {
+                    path: "cardsets/:cardsetId/quiz",
+                    element: <QuizPage/>,
                     loader: cardsetLoader
                 },
                 {
                     path: "cardsets/:cardsetId",
-                    element: <CardsetPage />,
+                    element: <CardsetPage/>,
                     loader: cardsetLoader
                 },
                 {

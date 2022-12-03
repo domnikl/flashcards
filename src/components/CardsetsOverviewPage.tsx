@@ -54,7 +54,8 @@ export function CardsetsOverviewPage() {
 
                         {cardsets?.map((cardset) => (
                             <Grid item xs={4} key={cardset.id}>
-                                <Card sx={{height: 'fill-parent', minHeight: '100px'}}>
+                                <Card sx={{height: 'fill-parent', minHeight: '100px', cursor: 'pointer'}}
+                                      onClick={() => navigate("/cardsets/" + cardset.id)}>
                                     <CardContent>
                                         <Typography variant="h6" component="div">
                                             {cardset.name}
