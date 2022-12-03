@@ -1,7 +1,7 @@
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import React from "react";
-import {Button, Card, CardContent, Container, Fab} from "@mui/material";
+import {Button, Card, Container, Fab} from "@mui/material";
 import {Add, Delete, Edit} from "@mui/icons-material";
 import {Params, useLoaderData, useNavigate} from "react-router-dom";
 import {Cardset} from "../model/Cardset";
@@ -12,14 +12,15 @@ import IsLoading from "./atoms/IsLoading";
 import EmptyView from "./atoms/EmptyView";
 import {PageHeader} from "./PageHeader";
 import {Auth} from "@supabase/auth-ui-react";
-import useUser = Auth.useUser;
 import IconButton from "@mui/material/IconButton";
 import HelpIcon from "@mui/icons-material/Help";
 import Tooltip from "@mui/material/Tooltip";
+import {Flashcard} from "./Flashcard";
+import useUser = Auth.useUser;
 
-export async function cardsetLoader({ params }: { params: Params }): Promise<Cardset|Response|null> {
+export async function cardsetLoader({params}: { params: Params }): Promise<Cardset | Response | null> {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    return await useCardset(params.cardsetId) ?? new Response("Not Found", { status: 404 });
+    return await useCardset(params.cardsetId) ?? new Response("Not Found", {status: 404});
 }
 
 export function CardsetPage() {
@@ -31,7 +32,7 @@ export function CardsetPage() {
     // @ts-ignore
     const {
         data: cards,
-        isLoading: isLoadingCards
+        isLoading
     } = useQuery<CardsetCard[]>(['cards', cardset.id], () => findAllCardsByCardset(cardset))
 
     const handleDelete = () => {
@@ -51,17 +52,19 @@ export function CardsetPage() {
 
     const emptyView = <React.Fragment>
         <Grid container direction="column" alignContent="center">
-            <Typography variant="caption" color="text.secondary" sx={{ textAlign: "center" }}>You don't have any cards in here yet.</Typography>
-            <Typography variant="caption" color="text.secondary" sx={{ textAlign: "center" }}>Fancy creating your first one?</Typography>
+            <Typography variant="caption" color="text.secondary" sx={{textAlign: "center"}}>You don't have any cards in
+                here yet.</Typography>
+            <Typography variant="caption" color="text.secondary" sx={{textAlign: "center"}}>Fancy creating your first
+                one?</Typography>
 
-            <Button variant="outlined" onClick={navigateToCreate} sx={{ marginTop: "20px" }}>add a card</Button>
+            <Button variant="outlined" onClick={navigateToCreate} sx={{marginTop: "20px"}}>add a card</Button>
         </Grid>
     </React.Fragment>;
 
     const actions = <React.Fragment>
         <Grid container>
-            <Button onClick={() => handleEdit()}><Edit /></Button>
-            <Button onClick={() => handleDelete()}><Delete /></Button>
+            <Button onClick={() => handleEdit()}><Edit/></Button>
+            <Button onClick={() => handleDelete()}><Delete/></Button>
             <Tooltip title="Help">
                 <IconButton color="inherit">
                     <HelpIcon/>
@@ -73,30 +76,22 @@ export function CardsetPage() {
     return (<React.Fragment>
         <PageHeader title={cardset.name} actions={actions}/>
 
-        <Container sx={{ padding: '20px' }}>
-            <IsLoading isFetching={isLoadingCards}>
+        <Container sx={{padding: '20px'}}>
+            <IsLoading isFetching={isLoading}>
                 <EmptyView checkItems={cards} emptyContent={emptyView}>
                     <Grid container alignItems="stretch" spacing={2} justifyItems="stretch">
                         <Grid item xs={4} alignItems="stretch" justifyContent="stretch">
                             <Card>
-                                <Button fullWidth color="inherit" onClick={navigateToCreate}>
-                                    <Add />
+                                <Button sx={{minHeight: '100px'}} fullWidth color="inherit"
+                                        onClick={navigateToCreate}>
+                                    <Add/>
                                 </Button>
                             </Card>
                         </Grid>
 
                         {cards?.map((card) => (
                             <Grid item xs={4} key={card.id}>
-                                <Card sx={{ height: 'fill-parent' }}>
-                                    <CardContent>
-                                        <Typography variant="h6" component="div">
-                                            {card.question}
-                                        </Typography>
-                                        <Typography variant="handwriting" sx={{ fontSize: '1em' }} color="text.secondary" gutterBottom>
-                                            {card.context}
-                                        </Typography>
-                                    </CardContent>
-                                </Card>
+                                <Flashcard card={card} key={card.id}/>
                             </Grid>
                         ))}
                     </Grid>
@@ -104,7 +99,7 @@ export function CardsetPage() {
             </IsLoading>
         </Container>
 
-        <Fab sx={{position: 'absolute', bottom: 32, right: 32}} color="primary" aria-label="add"
+        <Fab sx={{position: 'fixed', bottom: 32, right: 32}} color="primary" aria-label="add"
              onClick={navigateToCreate}>
             <Add/>
         </Fab>

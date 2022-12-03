@@ -37,7 +37,7 @@ export default function Navigator(props: DrawerProps) {
     // @ts-ignore
     const {
         data: cardsets,
-        isLoading: isLoadingCardsets
+        isLoading
     } = useQuery<Array<Cardset>>('cardsets', () => findAllCardsetsByUser(user.user))
 
     // TODO: mark the active one (if any)
@@ -57,15 +57,17 @@ export default function Navigator(props: DrawerProps) {
                     </ListItemIcon>
                     <ListItemText primary="Cards Overview"/>
                 </ListItemButton>
-                <IsLoading isFetching={isLoadingCardsets}>
+                <IsLoading isFetching={isLoading}>
                     <Box>
                         <ListItem sx={{py: 2, px: 3}}>
                             <ListItemText sx={{color: '#fff'}}>Flashcard Sets</ListItemText>
                         </ListItem>
                         <EmptyView checkItems={cardsets}
-                                   emptyContent={<ListItem><Button variant="outlined" href="/cardsets/create">Add your first cardset</Button></ListItem>}>
+                                   emptyContent={<ListItem><Button variant="outlined" href="/cardsets/create">Add your
+                                       first cardset</Button></ListItem>}>
                             {cardsets?.map((cardset) => (
-                                <ListItem disablePadding key={cardset.id} sx={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
+                                <ListItem disablePadding key={cardset.id}
+                                          sx={{whiteSpace: 'nowrap', textOverflow: 'ellipsis'}}>
                                     <ListItemButton component={Link} to={"/cardsets/" + cardset.id}>
                                         <ListItemText primary={cardset.name}/>
                                     </ListItemButton>

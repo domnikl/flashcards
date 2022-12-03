@@ -15,14 +15,14 @@ export function PageHeader(props: PageHeaderProps) {
         <AppBar
             component="div"
             color="primary"
-            position="static"
+            position="sticky"
             elevation={0}
             sx={{zIndex: 0}}
         >
             <Toolbar>
                 <Grid container alignItems="center" spacing={1}>
                     <Grid item xs>
-                        <Typography color="inherit" variant="h5" component="h1">
+                        <Typography color="inherit" variant="h5" component="h1" sx={{ whiteSpace: 'nowrap', textOverflow: "ellipsis"}}>
                             {props.title}
                         </Typography>
                     </Grid>
