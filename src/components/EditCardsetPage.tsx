@@ -12,22 +12,22 @@ import useUser = Auth.useUser;
 
 
 export function EditCardsetPage() {
-    let cardset = useLoaderData() as Cardset | null;
+    const loaderData = useLoaderData() as { cardset: Cardset | null } | undefined;
     const queryClient = useQueryClient();
     const navigate = useNavigate();
     const user = useUser();
-    const [id, setId] = useState<string>(cardset?.id ?? uuid());
+    const [id, setId] = useState<string>(loaderData?.cardset?.id ?? uuid());
 
-    const { control, handleSubmit, formState: { errors } } = useForm({
+    const {control, handleSubmit, formState: {errors}} = useForm({
         defaultValues: {
-            name: cardset?.name ?? ""
+            name: loaderData?.cardset?.name ?? ""
         }
     });
 
-    // TODO: limit the amount of cardsets a user can create
+    // TODO: limit the amount of cardsets a user can create!
 
-    const onSubmit = ({ name }: { name: string }) => {
-        const updated = {id, ...cardset, name, is_deleted: false}
+    const onSubmit = ({name}: { name: string }) => {
+        const updated = {id, ...loaderData?.cardset, name, is_deleted: false}
 
         if (user?.user) {
             saveCardset(updated, user!!.user!!.id).then((cardsets) => {
@@ -38,7 +38,7 @@ export function EditCardsetPage() {
     }
 
     return <React.Fragment>
-        <PageHeader title={(!cardset ? "Create" : "Edit") + " cardset"} />
+        <PageHeader title={(!loaderData?.cardset ? "Create" : "Edit") + " cardset"}/>
 
         <Container>
             <Grid container spacing={3}>
@@ -47,10 +47,11 @@ export function EditCardsetPage() {
                         name="name"
                         control={control}
                         rules={{
-                            required: { value: true, message: "is required" },
-                            minLength: { value: 3, message: "is too short (3 chars min.)"},
-                            maxLength: {value: 70, message: "is too long (70 chars max.)" }}}
-                        render={({ field }) => <TextField
+                            required: {value: true, message: "is required"},
+                            minLength: {value: 3, message: "is too short (3 chars min.)"},
+                            maxLength: {value: 70, message: "is too long (70 chars max.)"}
+                        }}
+                        render={({field}) => <TextField
                             required
                             id="name"
                             label="Name of the set"
@@ -66,10 +67,10 @@ export function EditCardsetPage() {
                 </Grid>
                 <Grid item xs={12}>
                     <Grid container direction="row" justifyContent="flex-end">
-                        <Grid item sx={{ padding: '5px' }}>
+                        <Grid item sx={{padding: '5px'}}>
                             <Button variant="outlined" onClick={() => navigate("/cardsets")}>Cancel</Button>
                         </Grid>
-                        <Grid item sx={{ padding: '5px' }}>
+                        <Grid item sx={{padding: '5px'}}>
                             <Button variant="contained" onClick={handleSubmit(onSubmit)}>Save</Button>
                         </Grid>
                     </Grid>

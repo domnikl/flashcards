@@ -15,10 +15,13 @@ export async function findAllCardsByCardset(cardset: Cardset): Promise<Array<Car
         .select()
         .eq("cardset_id", cardset?.id)
         .eq("is_deleted", false)
+        .order("created_at", {ascending: false})
         .then(({data}: { data: Card[] | null }) => {
             return data!!
         });
 }
+
+// TODO: join cardsets and cards with user to reduce the need for so many requests to Supabase
 
 export async function findAllCardsetsByUser(user: User | null): Promise<Array<Cardset>> {
     return supabase
@@ -42,6 +45,17 @@ export async function findCardsetById(id: string): Promise<Cardset | null> {
         });
 }
 
+export async function findCardById(id: string): Promise<Card | null> {
+    return supabase
+        .from("cards")
+        .select()
+        .eq("id", id)
+        .eq("is_deleted", false)
+        .then(({data}: { data: Card[] | null }) => {
+            return data?.at(0) ?? null;
+        });
+}
+
 export async function saveCardset(cardset: Cardset, user_id: string) {
     return supabase
         .from("cardsets")
@@ -52,11 +66,10 @@ export async function saveCardset(cardset: Cardset, user_id: string) {
         });
 }
 
-
-export async function saveCard(card: Card, user_id: string) {
+export async function saveCard(card: Card) {
     return supabase
         .from("cards")
-        .upsert([{...card, user_id: user_id}])
+        .upsert([{...card}])
         .select()
         .then(({data}: { data: Card[] | null }) => {
             return data!!;

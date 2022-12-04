@@ -1,60 +1,68 @@
 import React, {useState} from "react";
 import {Button, Container, Grid, TextField} from "@mui/material";
 import {Auth} from "@supabase/auth-ui-react";
-import {saveCard} from "../supabase";
+import {findCardById, saveCard} from "../supabase";
 import {uuid} from "@supabase/supabase-js/dist/main/lib/helpers";
 import {useQueryClient} from "react-query";
 import {Card} from "../model/Card";
-import {useLoaderData, useNavigate} from "react-router-dom";
-import {Cardset} from "../model/Cardset";
+import {Params, useLoaderData, useNavigate} from "react-router-dom";
 import {Controller, useForm} from "react-hook-form";
 import {PageHeader} from "./PageHeader";
+import {Cardset} from "../model/Cardset";
 import useUser = Auth.useUser;
 
-type EditCardPageProps = {
-    card?: Card | null;
+export async function cardLoader({params}: { params: Params }): Promise<{ card: Card | null } | Response | null> {
+    if (!params.cardId) {
+        return new Response("Not Found", {status: 404})
+    }
+
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return {card: await findCardById(params.cardId)} ?? new Response("Not Found", {status: 404});
 }
 
-export function EditCardPage(props: EditCardPageProps) {
-    const cardset = useLoaderData() as Cardset;
+export function EditCardPage() {
+    const {card, cardset} = useLoaderData() as { card: Card | null, cardset: Cardset | null };
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const user = useUser();
-    const [id, setId] = useState<string>(props.card?.id ?? uuid());
+    const [id, setId] = useState<string>(card?.id ?? uuid());
+
+    const cardsetId = card?.cardset_id ?? cardset?.id;
 
     const {control, handleSubmit, formState: {errors}} = useForm({
         defaultValues: {
-            question: props.card?.question ?? "",
-            answer: props.card?.answer ?? "",
-            context: props.card?.context ?? "",
+            question: card?.question ?? "",
+            answer: card?.answer ?? "",
+            context: card?.context ?? "",
         }
     });
 
     const onSubmit = ({question, answer, context}: { question: string, answer: string, context: string }) => {
-        const card: Card = props.card ?? {
+        const updated: Card = {
+            ...card,
             id: id,
             question: question,
             answer: answer,
             context: context === "" ? null : context,
-            cardset_id: cardset.id,
+            cardset_id: cardsetId ?? "",
             is_deleted: false,
-            user_id: user!!.user!!.id
+            user_id: user!!.user!!.id,
         }
 
         // TODO: what if supabase has an error?
 
         if (user?.user) {
-            saveCard(card, user!!.user!!.id).then((card) => {
-                setId(card[0].id);
+            saveCard(updated).then((c) => {
+                setId(c[0].id);
                 queryClient.invalidateQueries('cards').then(() => {
-                    navigate("/cardsets/" + cardset.id)
+                    navigate("/cardsets/" + cardsetId)
                 })
             })
         }
     }
 
     return <React.Fragment>
-        <PageHeader title={(!props.card ? "Create" : "Edit") + " card"}/>
+        <PageHeader title={(!card ? "Create" : "Edit") + " card"}/>
 
         <Container>
             <Grid container spacing={3}>
@@ -123,7 +131,7 @@ export function EditCardPage(props: EditCardPageProps) {
                     <Grid container direction="row" justifyContent="flex-end">
                         <Grid item sx={{padding: '5px'}}>
                             <Button variant="outlined"
-                                    onClick={() => navigate("/cardsets/" + cardset.id)}>Cancel</Button>
+                                    onClick={() => navigate("/cardsets/" + cardsetId)}>Cancel</Button>
                         </Grid>
                         <Grid item sx={{padding: '5px'}}>
                             <Button variant="contained" onClick={handleSubmit(onSubmit)}>Save</Button>

@@ -18,13 +18,17 @@ import Tooltip from "@mui/material/Tooltip";
 import {Flashcard} from "./Flashcard";
 import useUser = Auth.useUser;
 
-export async function cardsetLoader({params}: { params: Params }): Promise<Cardset | Response | null> {
+export async function cardsetLoader({params}: { params: Params }): Promise<{ cardset: Cardset | null } | Response | null> {
+    if (!params.cardsetId) {
+        return new Response("Not Found", {status: 404})
+    }
+
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    return await useCardset(params.cardsetId) ?? new Response("Not Found", {status: 404});
+    return {cardset: await useCardset(params.cardsetId)} ?? new Response("Not Found", {status: 404});
 }
 
 export function CardsetPage() {
-    const cardset = useLoaderData() as Cardset;
+    const {cardset} = useLoaderData() as { cardset: Cardset };
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const user = useUser();
@@ -79,8 +83,8 @@ export function CardsetPage() {
         <Container sx={{padding: '20px'}}>
             <IsLoading isFetching={isLoading}>
                 <EmptyView checkItems={cards} emptyContent={emptyView}>
-                    <Grid container alignItems="stretch" spacing={2} justifyItems="stretch">
-                        <Grid item xs={4} alignItems="stretch" justifyContent="stretch">
+                    <Grid container direction="row" alignItems="stretch" spacing={1} justifyItems="stretch">
+                        <Grid item xs={6} md={4}>
                             <Card>
                                 <Button sx={{minHeight: '100px'}} fullWidth color="inherit"
                                         onClick={navigateToCreate}>
@@ -90,8 +94,10 @@ export function CardsetPage() {
                         </Grid>
 
                         {cards?.map((card) => (
-                            <Grid item xs={4} key={card.id}>
-                                <Flashcard card={card} key={card.id}/>
+                            <Grid item xs={6} md={4} key={card.id}>
+                                <Flashcard card={card} key={card.id}
+                                           actionsFront={<IconButton
+                                               onClick={() => navigate("/cardsets/" + cardset.id + "/cards/" + card.id + "/edit")}><Edit/></IconButton>}/>
                             </Grid>
                         ))}
                     </Grid>

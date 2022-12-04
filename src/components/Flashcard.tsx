@@ -1,11 +1,13 @@
-import React, {useState} from "react";
+import React, {ReactNode, useState} from "react";
 import {Card as CardsetCard} from "../model/Card";
-import {Card, CardContent, Grid, SxProps, Theme} from "@mui/material";
+import {Card, CardActionArea, CardActions, CardContent, Grid, SxProps, Theme} from "@mui/material";
 import Typography from "@mui/material/Typography";
 
 export type FlashcardProps = {
     card: CardsetCard
     onFlipped?: (isFlipped: boolean) => void;
+    actionsFront?: ReactNode;
+    actionsBack?: ReactNode;
 }
 
 export function Flashcard(props: FlashcardProps) {
@@ -40,32 +42,41 @@ export function Flashcard(props: FlashcardProps) {
             transformStyle: 'preserve-3d',
             ...cardInnerSx
         }}>
-            <Card onClick={() => flip()} sx={{...cardContentSx}}>
-                <CardContent>
-                    <Typography variant="h6" component="div">
-                        {props.card.question}
-                    </Typography>
-                    <Typography variant="handwriting" sx={{fontSize: '1em'}} color="text.secondary"
-                                gutterBottom>
-                        {props.card.context}
-                    </Typography>
-                </CardContent>
+            <Card sx={{...cardContentSx}}>
+                <CardActionArea onClick={() => flip()}>
+                    <CardContent>
+                        <Typography variant="h6" component="div">
+                            {props.card.question}
+                        </Typography>
+                        <Typography variant="handwriting" sx={{fontSize: '1em'}} color="text.secondary"
+                                    gutterBottom>
+                            {props.card.context}
+                        </Typography>
+                    </CardContent>
+                </CardActionArea>
+                {props.actionsFront ? <CardActions>
+                    {props.actionsFront}
+                </CardActions> : null}
             </Card>
-            <Card onClick={() => flip()}
-                  sx={{...cardContentSx, transform: 'rotateY(180deg)', backgroundColor: "primary.dark"}}>
-                <CardContent>
-                    <Typography variant="caption" component="div" color="text.secondary"
-                                sx={{whiteSpace: 'nowrap', textOverflow: 'ellipsis'}}>
-                        {props.card.question}
-                    </Typography>
-                    <Typography variant="h6" component="div">
-                        {props.card.answer}
-                    </Typography>
-                    <Typography variant="handwriting" sx={{fontSize: '1em'}} color="text.secondary"
-                                gutterBottom>
-                        {props.card.context}
-                    </Typography>
-                </CardContent>
+            <Card sx={{...cardContentSx, transform: 'rotateY(180deg)', backgroundColor: "primary.dark"}}>
+                <CardActionArea onClick={() => flip()}>
+                    <CardContent>
+                        <Typography variant="caption" component="div" color="text.secondary"
+                                    sx={{whiteSpace: 'nowrap', textOverflow: 'ellipsis'}}>
+                            {props.card.question}
+                        </Typography>
+                        <Typography variant="h6" component="div">
+                            {props.card.answer}
+                        </Typography>
+                        <Typography variant="handwriting" sx={{fontSize: '1em'}} color="text.secondary"
+                                    gutterBottom>
+                            {props.card.context}
+                        </Typography>
+                    </CardContent>
+                </CardActionArea>
+                {props.actionsBack ? <CardActions>
+                    {props.actionsBack}
+                </CardActions> : null}
             </Card>
         </Grid>
     </Grid>;

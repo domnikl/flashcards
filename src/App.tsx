@@ -13,7 +13,7 @@ import {CardsetsOverviewPage} from "./components/CardsetsOverviewPage";
 import ErrorPage from "./components/ErrorPage";
 import {EditCardsetPage} from "./components/EditCardsetPage";
 import {cardsetLoader, CardsetPage} from "./components/CardsetPage";
-import {EditCardPage} from "./components/EditCardPage";
+import {cardLoader, EditCardPage} from "./components/EditCardPage";
 import {QuizPage} from "./components/QuizPage";
 import UserContextProvider = Auth.UserContextProvider;
 
@@ -42,6 +42,11 @@ function App() {
                     path: "cardsets/:cardsetId/cards/create",
                     element: <EditCardPage/>,
                     loader: cardsetLoader
+                },
+                {
+                    path: "cardsets/:cardsetId/cards/:cardId/edit",
+                    element: <EditCardPage/>,
+                    loader: cardLoader
                 },
                 {
                     path: "cardsets/:cardsetId/edit",
