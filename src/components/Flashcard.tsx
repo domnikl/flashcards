@@ -24,7 +24,7 @@ export function Flashcard(props: FlashcardProps) {
         backfaceVisibility: "hidden",
         position: 'absolute',
         width: '100%',
-        height: '100%',
+        // height: '100%',
     }
 
     let cardInnerSx: SxProps<Theme> = {}
@@ -55,7 +55,9 @@ export function Flashcard(props: FlashcardProps) {
                     </CardContent>
                 </CardActionArea>
                 {props.actionsFront ? <CardActions>
-                    {props.actionsFront}
+                    <Grid container direction="row" justifyContent="end">
+                        {props.actionsFront}
+                    </Grid>
                 </CardActions> : null}
             </Card>
             <Card sx={{...cardContentSx, transform: 'rotateY(180deg)', backgroundColor: "primary.dark"}}>
@@ -75,7 +77,9 @@ export function Flashcard(props: FlashcardProps) {
                     </CardContent>
                 </CardActionArea>
                 {props.actionsBack ? <CardActions>
-                    {props.actionsBack}
+                    <Grid container direction="row" justifyContent="end">
+                        {props.actionsBack}
+                    </Grid>
                 </CardActions> : null}
             </Card>
         </Grid>

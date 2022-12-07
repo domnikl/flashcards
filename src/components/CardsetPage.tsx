@@ -83,7 +83,7 @@ export function CardsetPage() {
         <Container sx={{padding: '20px'}}>
             <IsLoading isFetching={isLoading}>
                 <EmptyView checkItems={cards} emptyContent={emptyView}>
-                    <Grid container direction="row" alignItems="stretch" spacing={1} justifyItems="stretch">
+                    <Grid container direction="row" alignItems="stretch" spacing={4} justifyItems="stretch">
                         <Grid item xs={6} md={4}>
                             <Card>
                                 <Button sx={{minHeight: '100px'}} fullWidth color="inherit"
