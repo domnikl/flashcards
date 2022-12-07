@@ -22,7 +22,8 @@ export function PageHeader(props: PageHeaderProps) {
             <Toolbar>
                 <Grid container alignItems="center" spacing={1}>
                     <Grid item xs>
-                        <Typography color="inherit" variant="h5" component="h1" sx={{ whiteSpace: 'nowrap', textOverflow: "ellipsis"}}>
+                        <Typography color="inherit" variant="h5" component="h1"
+                                    sx={{whiteSpace: 'nowrap', textOverflow: "ellipsis"}}>
                             {props.title}
                         </Typography>
                     </Grid>
@@ -33,6 +34,6 @@ export function PageHeader(props: PageHeaderProps) {
             </Toolbar>
         </AppBar>
 
-        <Divider sx={{ marginBottom: "20px" }} />
+        <Divider sx={{marginBottom: "20px"}}/>
     </React.Fragment>
 }

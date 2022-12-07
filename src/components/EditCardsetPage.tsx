@@ -20,14 +20,17 @@ export function EditCardsetPage() {
 
     const {control, handleSubmit, formState: {errors}} = useForm({
         defaultValues: {
-            name: loaderData?.cardset?.name ?? ""
+            name: loaderData?.cardset?.name ?? "",
+            imageUrl: loaderData?.cardset?.image_url ?? "",
         }
     });
 
     // TODO: limit the amount of cardsets a user can create!
 
-    const onSubmit = ({name}: { name: string }) => {
-        const updated = {id, ...loaderData?.cardset, name, is_deleted: false}
+    const onSubmit = ({name, imageUrl}: { name: string, imageUrl: string | null }) => {
+        const updated = {
+            id, ...loaderData?.cardset, name, image_url: imageUrl, is_deleted: false
+        }
 
         if (user?.user) {
             saveCardset(updated, user!!.user!!.id).then((cardsets) => {
@@ -60,8 +63,37 @@ export function EditCardsetPage() {
                             fullWidth
                             autoComplete="name"
                             variant="filled"
-                            onKeyDown={(e) => e.key === "Enter" ? handleSubmit(onSubmit) : null}
                             autoFocus
+                            {...field}/>}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <Controller
+                        name="imageUrl"
+                        control={control}
+                        rules={{
+                            required: false,
+                            minLength: {value: 3, message: "is too short (3 chars min.)"},
+                            maxLength: {value: 255, message: "is too long (255 chars max.)"},
+                            validate: async (v) => {
+                                if (!v) return true;
+
+                                //const response = await fetch(v);
+                                //return response.ok;
+
+                                // TODO: cors?!
+                                return true;
+                            }
+                        }}
+                        render={({field}) => <TextField
+                            id="imageUrl"
+                            label="URL to a header image"
+                            error={!!errors?.imageUrl}
+                            helperText={errors?.imageUrl?.message}
+                            fullWidth
+                            autoComplete="url"
+                            variant="filled"
+                            type="url"
                             {...field}/>}
                     />
                 </Grid>

@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, Card, CardContent, Container, Fab} from "@mui/material";
+import {Button, Card, CardContent, CardMedia, Container, Fab} from "@mui/material";
 import {Add} from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
 import {PageHeader} from "./PageHeader";
@@ -56,6 +56,9 @@ export function CardsetsOverviewPage() {
                             <Grid item xs={4} key={cardset.id}>
                                 <Card sx={{height: 'fill-parent', minHeight: '100px', cursor: 'pointer'}}
                                       onClick={() => navigate("/cardsets/" + cardset.id)}>
+                                    {cardset.image_url ?
+                                        <CardMedia component="img" image={cardset.image_url} height="200"
+                                                   alt={cardset.name}/> : null}
                                     <CardContent>
                                         <Typography variant="h6" component="div">
                                             {cardset.name}
