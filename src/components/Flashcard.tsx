@@ -2,6 +2,8 @@ import React, {ReactNode, useState} from "react";
 import {Card as CardsetCard} from "../model/Card";
 import {Box, Card, CardActionArea, CardActions, CardContent, Grid, SxProps, Theme} from "@mui/material";
 import Typography from "@mui/material/Typography";
+import DOMPurify from "dompurify";
+import {marked} from "marked";
 
 export type FlashcardProps = {
     card: CardsetCard
@@ -48,9 +50,8 @@ export function Flashcard(props: FlashcardProps) {
                 sx={{...cardSx, zIndex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
                 <CardActionArea onClick={() => flip()} sx={{height: '100%', verticalAlign: 'top'}}>
                     <CardContent>
-                        <Typography variant="h6" component="div">
-                            {props.card.question}
-                        </Typography>
+                        <Typography variant="h6" component="div"
+                                    dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(marked.parseInline(props.card.question))}}/>
                     </CardContent>
                 </CardActionArea>
                 {props.actionsFront ? <CardActions>
@@ -72,12 +73,9 @@ export function Flashcard(props: FlashcardProps) {
                 <CardActionArea onClick={() => flip()} sx={{height: '100%', verticalAlign: 'top'}}>
                     <CardContent>
                         <Typography variant="caption" component="div" color="text.secondary"
-                                    sx={{whiteSpace: 'nowrap', textOverflow: 'ellipsis'}}>
-                            {props.card.question}
-                        </Typography>
-                        <Typography variant="h6" component="div">
-                            {props.card.answer}
-                        </Typography>
+                                    dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(marked.parse(props.card.question))}}/>
+                        <Typography variant="h6" component="div"
+                                    dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(marked.parse(props.card.answer))}}/>
                     </CardContent>
                 </CardActionArea>
                 {props.actionsBack ? <CardActions>

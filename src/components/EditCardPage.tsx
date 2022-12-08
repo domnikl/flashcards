@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Button, Container, Grid, TextField} from "@mui/material";
+import {Button, Container, Grid, Popover, TextField, Typography} from "@mui/material";
 import {Auth} from "@supabase/auth-ui-react";
 import {findCardById, saveCard} from "../supabase";
 import {uuid} from "@supabase/supabase-js/dist/main/lib/helpers";
@@ -9,6 +9,9 @@ import {Params, useLoaderData, useNavigate} from "react-router-dom";
 import {Controller, useForm} from "react-hook-form";
 import {PageHeader} from "./PageHeader";
 import {Cardset} from "../model/Cardset";
+import Tooltip from "@mui/material/Tooltip";
+import IconButton from "@mui/material/IconButton";
+import HelpIcon from "@mui/icons-material/Help";
 import useUser = Auth.useUser;
 
 export async function cardLoader({params}: { params: Params }): Promise<{ card: Card | null } | Response | null> {
@@ -59,8 +62,45 @@ export function EditCardPage() {
         }
     }
 
+    const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const open = Boolean(anchorEl);
+    const popoverId = open ? 'simple-popover' : undefined;
+
+    const actions = <React.Fragment>
+        <Grid container>
+            <Tooltip title="Help">
+                <IconButton color="inherit" onClick={handleClick}>
+                    <HelpIcon/>
+                </IconButton>
+
+            </Tooltip>
+            <Popover
+                id={popoverId}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}
+            >
+                <Typography sx={{p: 2}}>Add a question and an answer to the question. You can even use markdown
+                    to format your cards!</Typography>
+            </Popover>
+        </Grid>
+    </React.Fragment>
+
     return <React.Fragment>
-        <PageHeader title={(!card ? "Create" : "Edit") + " card"}/>
+        <PageHeader title={(!card ? "Create" : "Edit") + " card"} actions={actions}/>
 
         <Container>
             <Grid container spacing={3}>
@@ -74,6 +114,8 @@ export function EditCardPage() {
                         }}
                         render={({field}) => <TextField
                             required
+                            multiline
+                            rows={3}
                             id="question"
                             label="What should be on the front of the card?"
                             error={!!errors?.question}
@@ -95,6 +137,8 @@ export function EditCardPage() {
                         }}
                         render={({field}) => <TextField
                             required
+                            multiline
+                            rows={3}
                             id="answer"
                             label="What should be on the back?"
                             error={!!errors?.answer}
