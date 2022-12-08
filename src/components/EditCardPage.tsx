@@ -33,17 +33,15 @@ export function EditCardPage() {
         defaultValues: {
             question: card?.question ?? "",
             answer: card?.answer ?? "",
-            context: card?.context ?? "",
         }
     });
 
-    const onSubmit = ({question, answer, context}: { question: string, answer: string, context: string }) => {
+    const onSubmit = ({question, answer}: { question: string, answer: string }) => {
         const updated: Card = {
             ...card,
             id: id,
             question: question,
             answer: answer,
-            context: context === "" ? null : context,
             cardset_id: cardsetId ?? "",
             is_deleted: false,
             user_id: user!!.user!!.id,
@@ -101,26 +99,6 @@ export function EditCardPage() {
                             label="What should be on the back?"
                             error={!!errors?.answer}
                             helperText={errors?.answer?.message}
-                            fullWidth
-                            autoComplete="name"
-                            variant="filled"
-                            {...field}/>}
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <Controller
-                        name="context"
-                        control={control}
-                        rules={{
-                            maxLength: {value: 255, message: "is too long (255 chars max.)"}
-                        }}
-                        render={({field}) => <TextField
-                            multiline
-                            rows={3}
-                            id="context"
-                            label="some context"
-                            error={!!errors?.context}
-                            helperText={errors?.context?.message}
                             fullWidth
                             autoComplete="name"
                             variant="filled"

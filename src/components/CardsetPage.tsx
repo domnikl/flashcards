@@ -1,7 +1,7 @@
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import React from "react";
-import {Button, Card, Container, Fab} from "@mui/material";
+import {Box, Button, Card, Container, Fab} from "@mui/material";
 import {Add, Delete, Edit, PlayArrow} from "@mui/icons-material";
 import {Params, useLoaderData, useNavigate} from "react-router-dom";
 import {Cardset} from "../model/Cardset";
@@ -83,24 +83,29 @@ export function CardsetPage() {
         <Container sx={{padding: '20px'}}>
             <IsLoading isFetching={isLoading}>
                 <EmptyView checkItems={cards} emptyContent={emptyView}>
-                    <Grid container direction="row" alignItems="stretch" spacing={4} justifyItems="stretch">
-                        <Grid item xs={6} md={4}>
+                    <Box sx={{
+                        columnCount: 'auto',
+                        columnWidth: '300px',
+                        columnFill: 'balance',
+                    }}>
+                        <Box sx={{display: 'inline-block', width: '100%', paddingBottom: '10px'}}>
                             <Card>
-                                <Button sx={{minHeight: '100px'}} fullWidth color="inherit"
+                                <Button sx={{height: '100px'}} fullWidth color="inherit"
                                         onClick={navigateToCreate}>
                                     <Add/>
                                 </Button>
                             </Card>
-                        </Grid>
+                        </Box>
 
                         {cards?.map((card) => (
-                            <Grid item xs={6} md={4} key={card.id}>
-                                <Flashcard card={card} key={card.id}
-                                           actionsFront={<IconButton
+                            <Box key={card.id} sx={{display: 'inline-block', width: '100%', paddingBottom: '10px'}}>
+                                <Flashcard card={card} actionsFront={<IconButton
+                                    onClick={() => navigate("/cardsets/" + cardset.id + "/cards/" + card.id + "/edit")}><Edit/></IconButton>}
+                                           actionsBack={<IconButton
                                                onClick={() => navigate("/cardsets/" + cardset.id + "/cards/" + card.id + "/edit")}><Edit/></IconButton>}/>
-                            </Grid>
+                            </Box>
                         ))}
-                    </Grid>
+                    </Box>
                 </EmptyView>
             </IsLoading>
         </Container>

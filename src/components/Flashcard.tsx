@@ -1,6 +1,6 @@
 import React, {ReactNode, useState} from "react";
 import {Card as CardsetCard} from "../model/Card";
-import {Card, CardActionArea, CardActions, CardContent, Grid, SxProps, Theme} from "@mui/material";
+import {Box, Card, CardActionArea, CardActions, CardContent, Grid, SxProps, Theme} from "@mui/material";
 import Typography from "@mui/material/Typography";
 
 export type FlashcardProps = {
@@ -18,12 +18,14 @@ export function Flashcard(props: FlashcardProps) {
         props.onFlipped?.apply(null, [!isFlipped]);
     }
 
-    let cardContentSx: SxProps<Theme> = {
+    let cardSx: SxProps<Theme> = {
         cursor: "pointer",
         transformStyle: "preserve-3d",
         backfaceVisibility: "hidden",
-        position: 'absolute',
         width: '100%',
+        height: '100%',
+        gridColumn: '1 / 1',
+        gridRow: '1 / 1',
     }
 
     let cardInnerSx: SxProps<Theme> = {}
@@ -32,23 +34,22 @@ export function Flashcard(props: FlashcardProps) {
         cardInnerSx = {...cardInnerSx, transform: 'rotateY(180deg)'}
     }
 
-    return <Grid container sx={{minHeight: '100px', perspective: '1000px'}}>
-        <Grid container sx={{
-            position: 'relative',
+    return <Box sx={{perspective: '1000px', display: 'flex'}}>
+        <Box sx={{
             width: '100%',
             transition: 'transform 0.8s',
             transformStyle: 'preserve-3d',
+            display: 'grid',
+            gridTemplate: '1fr / 1fr',
+            placeItems: 'center',
             ...cardInnerSx
         }}>
-            <Card sx={{...cardContentSx}}>
-                <CardActionArea onClick={() => flip()}>
+            <Card
+                sx={{...cardSx, zIndex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
+                <CardActionArea onClick={() => flip()} sx={{height: '100%', verticalAlign: 'top'}}>
                     <CardContent>
                         <Typography variant="h6" component="div">
                             {props.card.question}
-                        </Typography>
-                        <Typography variant="handwriting" sx={{fontSize: '1em'}} color="text.secondary"
-                                    gutterBottom>
-                            {props.card.context}
                         </Typography>
                     </CardContent>
                 </CardActionArea>
@@ -58,8 +59,17 @@ export function Flashcard(props: FlashcardProps) {
                     </Grid>
                 </CardActions> : null}
             </Card>
-            <Card sx={{...cardContentSx, transform: 'rotateY(180deg)', backgroundColor: "primary.dark"}}>
-                <CardActionArea onClick={() => flip()}>
+
+            <Card sx={{
+                ...cardSx,
+                transform: 'rotateY(180deg)',
+                backgroundColor: "primary.dark",
+                zIndex: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between'
+            }}>
+                <CardActionArea onClick={() => flip()} sx={{height: '100%', verticalAlign: 'top'}}>
                     <CardContent>
                         <Typography variant="caption" component="div" color="text.secondary"
                                     sx={{whiteSpace: 'nowrap', textOverflow: 'ellipsis'}}>
@@ -67,10 +77,6 @@ export function Flashcard(props: FlashcardProps) {
                         </Typography>
                         <Typography variant="h6" component="div">
                             {props.card.answer}
-                        </Typography>
-                        <Typography variant="handwriting" sx={{fontSize: '1em'}} color="text.secondary"
-                                    gutterBottom>
-                            {props.card.context}
                         </Typography>
                     </CardContent>
                 </CardActionArea>
@@ -80,6 +86,6 @@ export function Flashcard(props: FlashcardProps) {
                     </Grid>
                 </CardActions> : null}
             </Card>
-        </Grid>
-    </Grid>;
+        </Box>
+    </Box>;
 }
