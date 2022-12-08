@@ -72,7 +72,7 @@ export function EditCardPage() {
                         control={control}
                         rules={{
                             required: {value: true, message: "is required"},
-                            maxLength: {value: 70, message: "is too long (70 chars max.)"}
+                            maxLength: {value: 255, message: "is too long (255 chars max.)"}
                         }}
                         render={({field}) => <TextField
                             required
@@ -93,7 +93,7 @@ export function EditCardPage() {
                         control={control}
                         rules={{
                             required: {value: true, message: "is required"},
-                            maxLength: {value: 70, message: "is too long (70 chars max.)"}
+                            maxLength: {value: 255, message: "is too long (255 chars max.)"}
                         }}
                         render={({field}) => <TextField
                             required

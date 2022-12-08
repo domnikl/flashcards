@@ -24,7 +24,6 @@ export function Flashcard(props: FlashcardProps) {
         backfaceVisibility: "hidden",
         position: 'absolute',
         width: '100%',
-        // height: '100%',
     }
 
     let cardInnerSx: SxProps<Theme> = {}
@@ -37,7 +36,6 @@ export function Flashcard(props: FlashcardProps) {
         <Grid container sx={{
             position: 'relative',
             width: '100%',
-            // height: '100px', // TODO: don't use hard-coded height, let the container decide
             transition: 'transform 0.8s',
             transformStyle: 'preserve-3d',
             ...cardInnerSx
