@@ -13,7 +13,7 @@ import {useQuery} from "react-query";
 import {Cardset} from "../model/Cardset";
 import IsLoading from './atoms/IsLoading';
 import EmptyView from "./atoms/EmptyView";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import useUser = Auth.useUser;
 
 const item = {
@@ -33,6 +33,7 @@ const itemCategory = {
 
 export default function Navigator(props: DrawerProps) {
     const user = useUser();
+    const navigate = useNavigate();
 
     // @ts-ignore
     const {
@@ -63,7 +64,8 @@ export default function Navigator(props: DrawerProps) {
                             <ListItemText sx={{color: '#fff'}}>Flashcard Sets</ListItemText>
                         </ListItem>
                         <EmptyView checkItems={cardsets}
-                                   emptyContent={<ListItem><Button variant="outlined" href="/cardsets/create">Add your
+                                   emptyContent={<ListItem><Button variant="outlined"
+                                                                   onClick={() => navigate("/cardsets/create")}>Add your
                                        first cardset</Button></ListItem>}>
                             {cardsets?.map((cardset) => (
                                 <ListItem disablePadding key={cardset.id}
