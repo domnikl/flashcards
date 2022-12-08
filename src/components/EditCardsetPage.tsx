@@ -87,7 +87,7 @@ export function EditCardsetPage() {
                         }}
                         render={({field}) => <TextField
                             id="imageUrl"
-                            label="URL to a header image"
+                            label="URL to a set image"
                             error={!!errors?.imageUrl}
                             helperText={errors?.imageUrl?.message}
                             fullWidth
