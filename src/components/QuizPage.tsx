@@ -1,11 +1,9 @@
 import React, {useEffect, useState} from "react";
-import {Button, Container} from "@mui/material";
+import {Button, LinearProgress} from "@mui/material";
 import {useLoaderData, useNavigate} from "react-router-dom";
 import {PageHeader} from "./PageHeader";
-import IsLoading from "./atoms/IsLoading";
 import Grid from "@mui/material/Grid";
-import {useQuery} from "react-query";
-import {findQuizzesByUserId, saveQuiz} from "../supabase";
+import {saveQuizzes} from "../supabase";
 import {Card as CardsetCard} from "../model/Card";
 import {Cardset} from "../model/Cardset";
 import {Flashcard} from "./Flashcard";
@@ -23,38 +21,45 @@ export function QuizPage() {
     const [card, setCard] = useState<CardsetCard | null>();
     const [answeredCards, setAnsweredCards] = useState<CardsetCard[]>([]);
     const [isFlipped, setIsFlipped] = useState<boolean>(false);
-
-    // @ts-ignore
-    const {
-        data: quizzes,
-        isLoading: isLoadingQuizzes
-    } = useQuery<Quiz[]>(['quizzes'], () => findQuizzesByUserId(user!!.user!!.id));
+    const [progress, setProgress] = useState<number>(5);
+    const [answers, setAnswers] = useState<Set<Quiz>>(new Set());
 
     const respond = (answerWas: AnswerWas) => {
-        if (card && cardset.cards) {
-            const quiz = quizzes?.filter(quiz => quiz.card_id === card.id)?.at(0) ?? {
+        if (card) {
+            const quiz = card.quiz?.at(0) ?? {
                 id: uuid(),
                 card_id: card.id,
                 user_id: user!!.user!!.id,
                 answers_were: []
             };
 
+            // @ts-ignore ignore probably non-existing field created_at
+            delete quiz["created_at"];
+
             // only allow 10 last answers in there
             quiz.answers_were = [...quiz.answers_were, answerWas].slice(-10);
+            card.quiz = [quiz];
 
-            // TODO: save when the quiz is finished!
-            saveQuiz(quiz).then(() => setAnsweredCards([...answeredCards, card]))
+            setAnsweredCards([...answeredCards, card])
+            setAnswers(new  Set([...answers, quiz]))
         }
     }
 
     useEffect(() => {
         if (cardset.cards) {
             setCard(chooseNextCard(cardset.cards, answeredCards));
+            setProgress((100 / cardset.cards.length) * answeredCards.length);
             setIsFlipped(false);
         }
     }, [cardset, answeredCards]);
 
-    // TODO: implement if a user took too long to answer
+    useEffect(() => {
+        if (card === null && answers.size > 0) {
+            saveQuizzes(answers)
+        }
+    }, [card, answers]);
+
+    // TODO: implement if a user took too long to answer!
 
     const quizFinished = <React.Fragment>
         <Grid container direction="column" alignContent="center">
@@ -67,31 +72,34 @@ export function QuizPage() {
     return (<React.Fragment>
         <PageHeader title={"Quiz: " + cardset.name}/>
 
-        <Container sx={{padding: '20px'}}>
-            <IsLoading isFetching={isLoadingQuizzes}>
-                <EmptyView checkItems={card} emptyContent={quizFinished}>
-                    <Grid container direction="column" alignItems="center" spacing={10}>
-                        <Grid container item xs={12} justifyContent="center">
+        <Grid container direction="column" sx={{padding: '20px'}} flex={10}>
+            <EmptyView checkItems={card} emptyContent={quizFinished}>
+                <Grid container item direction="column" justifyContent="space-between" flex={1}>
+                    <Grid container item direction="column" alignItems="center" spacing={10}>
+                        <Grid container item justifyContent="center" spacing={5}>
                             <Grid item xs={6}>
                                 {card ? <Flashcard key={card.id} card={card}
                                                    onFlipped={(flipped) => setIsFlipped(flipped)}/> : null}
                             </Grid>
                         </Grid>
-                        {isFlipped ? <Grid container item xs={6} spacing={5} justifyContent="center">
+
+                        {isFlipped ? <Grid container item spacing={5} justifyContent="center">
                             <Grid item>
-                                <Button variant="contained" color="error"
+                                <Button variant="contained" color="error" size="large"
                                         onClick={() => respond('incorrect')}>wrong</Button>
                             </Grid>
                             <Grid item>
-                                <Button variant="contained" color="success"
+                                <Button variant="contained" color="success" size="large"
                                         onClick={() => respond('correct')}>right</Button>
                             </Grid>
-                        </Grid> : <Grid item xs={6}>
-                            <Button variant="outlined" onClick={() => respond('skipped')}>skip</Button>
+                        </Grid> : <Grid item>
+                            <Button variant="outlined" size="large" onClick={() => respond('skipped')}>skip</Button>
                         </Grid>}
                     </Grid>
-                </EmptyView>
-            </IsLoading>
-        </Container>
+
+                    <LinearProgress variant="determinate" value={progress} />
+                </Grid>
+            </EmptyView>
+        </Grid>
     </React.Fragment>);
 }

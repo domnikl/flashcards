@@ -23,7 +23,7 @@ export async function findAllCardsetsByUser(user: User | null): Promise<Array<Ca
 export async function findCardsetById(id: string): Promise<Cardset | null> {
     return supabase
         .from("cardsets")
-        .select(`id, name, is_deleted, image_url, user_id, cards (*)`)
+        .select(`id, name, is_deleted, image_url, user_id, cards (*, quiz (*))`)
         .eq("id", id)
         .eq("is_deleted", false)
         .eq("cards.is_deleted", false)
@@ -65,20 +65,10 @@ export async function saveCard(card: Card) {
         });
 }
 
-export async function findQuizzesByUserId(user_id: string): Promise<Quiz[]> {
+export async function saveQuizzes(quizzes: Set<Quiz>) {
     return supabase
         .from("quiz")
-        .select()
-        .eq("user_id", user_id)
-        .then(({data}: { data: Quiz[] | null }) => {
-            return data ?? [];
-        });
-}
-
-export async function saveQuiz(quiz: Quiz) {
-    return supabase
-        .from("quiz")
-        .upsert([{...quiz}])
+        .upsert([...quizzes])
         .select()
         .then(({data}: { data: Card[] | null }) => {
             return data!!;

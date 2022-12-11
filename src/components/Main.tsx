@@ -46,7 +46,7 @@ export function Main() {
             </Box>
             <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
                 <Header onDrawerToggle={handleDrawerToggle}/>
-                <Box component="main" sx={{flex: 1}}>
+                <Box component="main" sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
                     <Outlet/>
                 </Box>
 
