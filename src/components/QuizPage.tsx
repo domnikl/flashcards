@@ -5,7 +5,7 @@ import {PageHeader} from "./PageHeader";
 import IsLoading from "./atoms/IsLoading";
 import Grid from "@mui/material/Grid";
 import {useQuery} from "react-query";
-import {findAllCardsByCardset, findQuizzesByUserId, saveQuiz} from "../supabase";
+import {findQuizzesByUserId, saveQuiz} from "../supabase";
 import {Card as CardsetCard} from "../model/Card";
 import {Cardset} from "../model/Cardset";
 import {Flashcard} from "./Flashcard";
@@ -26,18 +26,12 @@ export function QuizPage() {
 
     // @ts-ignore
     const {
-        data: cards,
-        isLoading
-    } = useQuery<CardsetCard[]>(['cards'], () => findAllCardsByCardset(cardset));
-
-    // @ts-ignore
-    const {
         data: quizzes,
         isLoading: isLoadingQuizzes
     } = useQuery<Quiz[]>(['quizzes'], () => findQuizzesByUserId(user!!.user!!.id));
 
     const respond = (answerWas: AnswerWas) => {
-        if (card && cards) {
+        if (card && cardset.cards) {
             const quiz = quizzes?.filter(quiz => quiz.card_id === card.id)?.at(0) ?? {
                 id: uuid(),
                 card_id: card.id,
@@ -48,16 +42,17 @@ export function QuizPage() {
             // only allow 10 last answers in there
             quiz.answers_were = [...quiz.answers_were, answerWas].slice(-10);
 
+            // TODO: save when the quiz is finished!
             saveQuiz(quiz).then(() => setAnsweredCards([...answeredCards, card]))
         }
     }
 
     useEffect(() => {
-        if (cards) {
-            setCard(chooseNextCard(cards, answeredCards));
+        if (cardset.cards) {
+            setCard(chooseNextCard(cardset.cards, answeredCards));
             setIsFlipped(false);
         }
-    }, [cards, answeredCards]);
+    }, [cardset, answeredCards]);
 
     // TODO: implement if a user took too long to answer
 
@@ -73,7 +68,7 @@ export function QuizPage() {
         <PageHeader title={"Quiz: " + cardset.name}/>
 
         <Container sx={{padding: '20px'}}>
-            <IsLoading isFetching={isLoading || isLoadingQuizzes}>
+            <IsLoading isFetching={isLoadingQuizzes}>
                 <EmptyView checkItems={card} emptyContent={quizFinished}>
                     <Grid container direction="column" alignItems="center" spacing={10}>
                         <Grid container item xs={12} justifyContent="center">

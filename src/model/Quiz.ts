@@ -13,7 +13,7 @@ export function chooseNextCard(cards: Card[], answered: Card[]): Card {
     // TODO: implement more sophisticated algorithm for choosing cards
     // TODO: repeat some cards if they were answered wrongly
     const available = cards.filter(value => !answered.includes(value));
-    const cardSelected = available[Math.floor(Math.random())];
+    const cardSelected = available[Math.floor(Math.random()) * available.length];
 
     
     return cardSelected;

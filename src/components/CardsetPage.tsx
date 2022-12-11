@@ -5,10 +5,8 @@ import {Box, Button, Card, Container, Fab} from "@mui/material";
 import {Add, Delete, Edit, PlayArrow} from "@mui/icons-material";
 import {Params, useLoaderData, useNavigate} from "react-router-dom";
 import {Cardset} from "../model/Cardset";
-import {findAllCardsByCardset, saveCardset, useCardset} from "../supabase";
-import {Card as CardsetCard} from "../model/Card";
-import {useQuery, useQueryClient} from "react-query";
-import IsLoading from "./atoms/IsLoading";
+import {findCardsetById, saveCardset} from "../supabase";
+import {useQueryClient} from "react-query";
 import EmptyView from "./atoms/EmptyView";
 import {PageHeader} from "./PageHeader";
 import {Auth} from "@supabase/auth-ui-react";
@@ -24,7 +22,7 @@ export async function cardsetLoader({params}: { params: Params }): Promise<{ car
     }
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    return {cardset: await useCardset(params.cardsetId)} ?? new Response("Not Found", {status: 404});
+    return {cardset: await findCardsetById(params.cardsetId)} ?? new Response("Not Found", {status: 404});
 }
 
 export function CardsetPage() {
@@ -32,12 +30,6 @@ export function CardsetPage() {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const user = useUser();
-
-    // @ts-ignore
-    const {
-        data: cards,
-        isLoading
-    } = useQuery<CardsetCard[]>(['cards', cardset.id], () => findAllCardsByCardset(cardset))
 
     const handleDelete = () => {
         if (window.confirm("Are you sure? This can not be reverted.")) {
@@ -81,8 +73,7 @@ export function CardsetPage() {
         <PageHeader title={cardset.name} actions={actions}/>
 
         <Container sx={{padding: '20px'}}>
-            <IsLoading isFetching={isLoading}>
-                <EmptyView checkItems={cards} emptyContent={emptyView}>
+                <EmptyView checkItems={cardset.cards} emptyContent={emptyView}>
                     <Box sx={{
                         columnCount: 'auto',
                         columnWidth: '300px',
@@ -97,7 +88,7 @@ export function CardsetPage() {
                             </Card>
                         </Box>
 
-                        {cards?.map((card) => (
+                        {cardset.cards?.map((card) => (
                             <Box key={card.id} sx={{display: 'inline-block', width: '100%', paddingBottom: '10px'}}>
                                 <Flashcard card={card} actionsFront={<IconButton
                                     onClick={() => navigate("/cardsets/" + cardset.id + "/cards/" + card.id + "/edit")}><Edit/></IconButton>}
@@ -107,7 +98,6 @@ export function CardsetPage() {
                         ))}
                     </Box>
                 </EmptyView>
-            </IsLoading>
         </Container>
 
         <Fab sx={{position: 'fixed', bottom: 32, right: 32}} color="primary" aria-label="add"

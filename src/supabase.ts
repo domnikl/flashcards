@@ -9,20 +9,6 @@ export const supabase = createClient(supabaseUrl, supabaseKey)
 
 // TODO: better error handling for all queries
 
-export async function findAllCardsByCardset(cardset: Cardset): Promise<Array<Card>> {
-    return supabase
-        .from("cards")
-        .select()
-        .eq("cardset_id", cardset?.id)
-        .eq("is_deleted", false)
-        .order("created_at", {ascending: false})
-        .then(({data}: { data: Card[] | null }) => {
-            return data!!
-        });
-}
-
-// TODO: join cardsets and cards with user to reduce the need for so many requests to Supabase
-
 export async function findAllCardsetsByUser(user: User | null): Promise<Array<Cardset>> {
     return supabase
         .from("cardsets")
@@ -37,10 +23,13 @@ export async function findAllCardsetsByUser(user: User | null): Promise<Array<Ca
 export async function findCardsetById(id: string): Promise<Cardset | null> {
     return supabase
         .from("cardsets")
-        .select()
+        .select(`id, name, is_deleted, image_url, user_id, cards (*)`)
         .eq("id", id)
         .eq("is_deleted", false)
+        .eq("cards.is_deleted", false)
         .then(({data}: { data: Cardset[] | null }) => {
+            console.log(data);
+
             return data?.at(0) ?? null;
         });
 }
@@ -94,8 +83,4 @@ export async function saveQuiz(quiz: Quiz) {
         .then(({data}: { data: Card[] | null }) => {
             return data!!;
         });
-}
-
-export async function useCardset(id: string | undefined): Promise<Cardset | null> {
-    return id ? await findCardsetById(id) ?? null : null;
 }
