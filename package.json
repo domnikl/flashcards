@@ -55,7 +55,7 @@
     ]
   },
   "devDependencies": {
-    "@types/dompurify": "^2.4.0",
+    "@types/dompurify": "^3.0.0",
     "eslint-plugin-react-hooks": "^4.6.0"
   }
 }
