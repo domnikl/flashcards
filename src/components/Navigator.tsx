@@ -9,7 +9,7 @@ import ListItemText from '@mui/material/ListItemText';
 import HomeIcon from '@mui/icons-material/Home';
 import {Auth} from "@supabase/auth-ui-react";
 import {findAllCardsetsByUser} from "../supabase";
-import {useQuery} from "react-query";
+import {useQuery} from "@tanstack/react-query";
 import {Cardset} from "../model/Cardset";
 import IsLoading from './atoms/IsLoading';
 import EmptyView from "./atoms/EmptyView";
@@ -39,7 +39,7 @@ export default function Navigator(props: DrawerProps) {
     const {
         data: cardsets,
         isLoading
-    } = useQuery<Array<Cardset>>('cardsets', () => findAllCardsetsByUser(user.user))
+    } = useQuery<Array<Cardset>>({ queryKey: ['cardsets'], queryFn: () => findAllCardsetsByUser(user.user)})
 
     // TODO: mark the active one (if any)
     const {...other} = props;

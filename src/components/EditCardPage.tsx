@@ -3,7 +3,7 @@ import {Button, Container, Grid, Popover, TextField, Typography} from "@mui/mate
 import {Auth} from "@supabase/auth-ui-react";
 import {findCardById, saveCard} from "../supabase";
 import {uuid} from "@supabase/supabase-js/dist/main/lib/helpers";
-import {useQueryClient} from "react-query";
+import {useQueryClient} from "@tanstack/react-query";
 import {Card} from "../model/Card";
 import {Params, useLoaderData, useNavigate} from "react-router-dom";
 import {Controller, useForm} from "react-hook-form";
@@ -54,10 +54,13 @@ export function EditCardPage() {
 
         if (user?.user) {
             saveCard(updated).then((c) => {
-                setId(c[0].id);
-                queryClient.invalidateQueries('cards').then(() => {
-                    navigate("/cardsets/" + cardsetId)
-                })
+                if (c) {
+                    setId(c[0].id);
+
+                    queryClient.invalidateQueries({queryKey: ['cards']}).then(() => {
+                        navigate("/cardsets/" + cardsetId)
+                    })
+                }
             })
         }
     }

@@ -1,12 +1,11 @@
 import {supabase} from "../supabase";
-import {Auth, ThemeSupa} from "@supabase/auth-ui-react";
+import {Auth} from "@supabase/auth-ui-react";
 import React from "react";
 import {theme} from "../Theme";
 
 export function Login() {
     return <Auth supabaseClient={supabase}
                  appearance={{
-                     theme: ThemeSupa,
                      variables: {
                          default: {
                              colors: {

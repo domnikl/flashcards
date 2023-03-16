@@ -6,7 +6,7 @@ import {Add, Delete, Edit, PlayArrow} from "@mui/icons-material";
 import {Params, useLoaderData, useNavigate} from "react-router-dom";
 import {Cardset} from "../model/Cardset";
 import {findCardsetById, saveCardset} from "../supabase";
-import {useQueryClient} from "react-query";
+import {useQueryClient} from "@tanstack/react-query";
 import EmptyView from "./atoms/EmptyView";
 import {PageHeader} from "./PageHeader";
 import {Auth} from "@supabase/auth-ui-react";
@@ -35,7 +35,7 @@ export function CardsetPage() {
         if (window.confirm("Are you sure? This can not be reverted.")) {
             cardset.is_deleted = true;
             saveCardset(cardset, user!!.user!!.id)
-                .then(() => queryClient.invalidateQueries("cards"))
+                .then(() => queryClient.invalidateQueries({ queryKey: ["cards"] }))
                 .then(() => navigate("/cardsets"))
         }
     }

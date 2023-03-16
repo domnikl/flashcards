@@ -3,7 +3,7 @@ import {Button, Container, Grid, TextField} from "@mui/material";
 import {Cardset} from "../model/Cardset";
 import {Auth} from "@supabase/auth-ui-react";
 import {uuid} from "@supabase/supabase-js/dist/main/lib/helpers";
-import {useQueryClient} from "react-query";
+import {useQueryClient} from "@tanstack/react-query";
 import {useLoaderData, useNavigate} from "react-router-dom";
 import {Controller, useForm} from "react-hook-form";
 import {saveCardset} from "../supabase";
@@ -34,8 +34,11 @@ export function EditCardsetPage() {
 
         if (user?.user) {
             saveCardset(updated, user!!.user!!.id).then((cardsets) => {
-                setId(cardsets[0].id);
-                queryClient.invalidateQueries('cardsets').then(() => navigate("/cardsets/" + cardsets[0].id, {replace: true}))
+                if (cardsets) {
+                    setId(cardsets[0].id);
+
+                    queryClient.invalidateQueries({queryKey: ['cardsets']}).then(() => navigate("/cardsets/" + cardsets[0].id, {replace: true}))
+                }
             })
         }
     }

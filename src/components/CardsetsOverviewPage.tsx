@@ -7,7 +7,7 @@ import IsLoading from "./atoms/IsLoading";
 import EmptyView from "./atoms/EmptyView";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import {useQuery} from "react-query";
+import {useQuery} from "@tanstack/react-query";
 import {findAllCardsetsByUser} from "../supabase";
 import {Cardset} from "../model/Cardset";
 import {Auth} from "@supabase/auth-ui-react";

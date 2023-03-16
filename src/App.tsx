@@ -7,7 +7,7 @@ import {Login} from "./components/Login";
 import {Auth} from "@supabase/auth-ui-react";
 import {supabase} from "./supabase";
 import {User} from "@supabase/supabase-js";
-import {QueryClient, QueryClientProvider} from "react-query";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import {createHashRouter, RouterProvider} from "react-router-dom";
 import {CardsetsOverviewPage} from "./components/CardsetsOverviewPage";
 import ErrorPage from "./components/ErrorPage";

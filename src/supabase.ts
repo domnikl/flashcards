@@ -15,8 +15,8 @@ export async function findAllCardsetsByUser(user: User | null): Promise<Array<Ca
         .select()
         .eq("user_id", user?.id)
         .eq("is_deleted", false)
-        .then(({data}: { data: Cardset[] | null }) => {
-            return data!!
+        .then(({data}) => {
+            return data!! as Cardset[]
         });
 }
 
@@ -27,10 +27,8 @@ export async function findCardsetById(id: string): Promise<Cardset | null> {
         .eq("id", id)
         .eq("is_deleted", false)
         .eq("cards.is_deleted", false)
-        .then(({data}: { data: Cardset[] | null }) => {
-            console.log(data);
-
-            return data?.at(0) ?? null;
+        .then(({data}) => {
+            return (data?.at(0) ?? null) as Cardset | null;
         });
 }
 
@@ -40,8 +38,8 @@ export async function findCardById(id: string): Promise<Card | null> {
         .select()
         .eq("id", id)
         .eq("is_deleted", false)
-        .then(({data}: { data: Card[] | null }) => {
-            return data?.at(0) ?? null;
+        .then(({data}) => {
+            return (data?.at(0) ?? null) as Card | null;
         });
 }
 
@@ -50,8 +48,8 @@ export async function saveCardset(cardset: Cardset, user_id: string) {
         .from("cardsets")
         .upsert([{...cardset, user_id: user_id}])
         .select()
-        .then(({data}: { data: Cardset[] | null }) => {
-            return data!!;
+        .then(({data}) => {
+            return data!! as Cardset[] | null;
         });
 }
 
@@ -60,8 +58,8 @@ export async function saveCard(card: Card) {
         .from("cards")
         .upsert([{...card}])
         .select()
-        .then(({data}: { data: Card[] | null }) => {
-            return data!!;
+        .then(({data}) => {
+            return data!! as Card[] | null;
         });
 }
 
@@ -70,7 +68,7 @@ export async function saveQuizzes(quizzes: Set<Quiz>) {
         .from("quiz")
         .upsert([...quizzes])
         .select()
-        .then(({data}: { data: Card[] | null }) => {
-            return data!!;
+        .then(({data}) => {
+            return data!! as Card[] | null;
         });
 }
