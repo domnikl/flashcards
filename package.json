@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@emotion/styled": "^11.10.5",
-    "@fontsource/roboto": "^4.5.8",
+    "@fontsource/roboto": "^5.0.0",
     "@mui/icons-material": "^5.10.16",
     "@mui/material": "^5.10.16",
     "@mui/styled-engine-sc": "^5.10.16",
