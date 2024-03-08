@@ -13,12 +13,9 @@ export type FlashcardProps = {
 }
 
 export function Flashcard(props: FlashcardProps) {
-    let answer = "";
-    let question = "";
+    let answer = marked.parse(props.card.question) as string;
+    let question = marked.parse(props.card.answer) as string;
     const [isFlipped, setIsFlipped] = useState<boolean>(false);
-
-    (marked.parseInline(props.card.question) as Promise<string>).then((x) => question = x);
-    (marked.parseInline(props.card.answer) as Promise<string>).then((x) => (answer = x));
 
     const flip = () => {
         setIsFlipped(!isFlipped);
