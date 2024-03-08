@@ -21,7 +21,10 @@ export function CardsetsOverviewPage() {
     const {
         data: cardsets,
         isLoading
-    } = useQuery<Cardset[]>(['cardsets'], () => findAllCardsetsByUser(user!!.user!!));
+    } = useQuery<Cardset[]>({
+      queryKey: ["cardsets"],
+      queryFn: () => findAllCardsetsByUser(user!!.user!!),
+    });
 
     const navigateToCreate = () => navigate("/cardsets/create", {replace: true});
 
