@@ -1,6 +1,5 @@
 import {supabase} from "../supabase";
 import {Auth} from "@supabase/auth-ui-react";
-import React from "react";
 import {theme} from "../Theme";
 
 export function Login() {
@@ -15,7 +14,6 @@ export function Login() {
                          }
                      }
                  }}
-                 theme="dark"
                  onlyThirdPartyProviders
                  providers={["github"]}
     ></Auth>
