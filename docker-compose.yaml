@@ -1,7 +1,9 @@
 services:
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - "3000:3000"
-    env_file:
-      - .envrc
+      - "3000:80"
+    volumes:
+      - ./public/env-config.js:/usr/share/nginx/html/env-config.js
